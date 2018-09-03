@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Этник - Переводчик!</title>
+
+	<link rel="icon" href=​"favicon.png" type="image/png">
+	<link rel="stylesheet" type="text/css" href="style.css?ver=<?php echo date(dmYHis);?>" >
+<link rel="stylesheet" href="virtual-keyboard.css?ver=<?php echo date(dmYHis);?>">
+
+	<meta charset="UTF-8">
+	<meta name="keywords" content="переводчик, словарь, перевод текста">
+	<meta name="description" content="Онлайн переводчик текста">
+
+
+<meta property="og:url" content="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Этник Переводчик" />
+<meta property="og:description" content="Онлайн переводчик текста" />
+<meta property="og:image" content="/logo.png" />
+<meta property="fb:app_id" content="идентификатор_вашего_приложения_Facebook"></meta>
+
+<meta name="twitter:card" content="summary"></meta> 
+<meta name="twitter:title" content=""></meta> 
+<meta name="twitter:description" content=""></meta> 
+<meta name="twitter:image" content=""></meta>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+	<script src="virtual-keyboard.js"></script>
+	<!--rubber_field-->
+	<script type="text/javascript">
+		function(){
+			document.getElementById("field1").onkeyup = function(){
+				var getText = this.value;
+				var getRegs = getText.match(/^.*(\r\n|\n|$)/gim);
+				var setText = false;
+				for(var i = 0; i < getRegs.length; i++){
+					getText = getRegs[i].replace(/\r|\n/g, "");
+					setText += getText.length ? Math.ceil(getText.length / 50) : 1;
+				}
+				this.rows = setText;
+			};
+		};
+	</script>
+	<!--symbol_counter-->
+	<script>
+		function counter(el)
+		{var wrapper = document.createElement('DIV');
+		wrapper.innerHTML = el.value;
+		var len = (wrapper.textContent || wrapper.innerText).length;
+		document.getElementById('symbol_count').innerHTML = el.value.length + ' / ' + el.maxLength;
+	}
+</script>
+
+
+<script>
+	function copy(text) {
+		var t = document.getElementById('field2')
+		t.innerHTML = text
+		t.select()
+		try {
+			var successful = document.execCommand('copy')
+			var msg = successful ? 'successfully' : 'unsuccessfully'
+			console.log('text coppied ' + msg)
+		} catch (err) {
+			console.log('Unable to copy text')
+		}
+		t.innerHTML = ''
+	}
+</script>
+
+<!--tooltip-->
+<script type="text/javascript">
+	// Основная функция, передаем в нее обрабатываемый тег
+// или this (для текущего тега)
+function helptip(t) {
+    // Разрешаем закрытие подсказок
+    // Создаем постоянную переменную этой функции для этих целей
+    // Условимся: если ноль, то можно закрывать, а если единица, то нельзя
+    helptip.v = 0;
+    // Берем последний дочерний тег
+    var b = t.children[(t.children.length-1)];
+    // Если открыт, то закрываем
+    if (b.style.display=="block") helptipx();
+    else {
+        // Закрываем все
+        helptipx();
+        // Открываем текущий
+        b.style.display = "block"; document.querySelector(".helptip").style.background='#ebebeb';
+        // Запрещаем закрытие подсказки вызванного последующими событиями
+        helptip.v = 1;
+    }
+}
+// Функция закрывает все подсказки
+function helptipx() {
+    // Если было нажатие для открытия подсказки, то закрывать нельзя
+    // Поэтому проверяем:
+    if (helptip.v==1) {
+        // Разрешаем закрытие в будущем
+        helptip.v = 0;
+        // И выходим
+        return;
+    }
+    // Выбираем все теги с классом .helptip
+    var s = document.querySelectorAll(".helptip");
+    // и перебираем их циклом
+    for (var i=0; i < s.length; i++) {
+        // Скрываем последний дочерний тег
+        s[i].children[(s[i].children.length-1)].style.display = "none";document.querySelector(".helptip").style.background='none';
+    }
+}
+
+
+</script>
+
+<script type="text/javascript">
+var full_dictionary = {
+rus: ['привет', 'здравствуй', 'здравствуйте'],
+erz: ['шумбрачи']
+};
+
+
+function translate(){
+document.getElementById('field2').value=document.getElementById('field1').value;
+
+var rus = [0, 'Переводчик','Хлеб']; 
+var erz = [0, 'говно ерз', 'Кшэ'];  
+var mok = [0, 'говно мок', 'Сало']; 
+
+$('select#language').change(function() {
+lanRegion = $(this).val();
+localStorage.removeItem("lanRegion"); // Мало ли xD 
+localStorage.setItem('lanRegion', ''+lanRegion+'');
+});
+
+Lang = localStorage.getItem("lanRegion");
+$('#language option[value="'+Lang+'"]').attr('selected', 'selected');
+
+f_Lang = $('#selector_language').val();
+//if(f_Lang==='find') {f_Lang = rus};
+if(f_Lang==='f_rus') {f_Lang = rus}; 
+if(f_Lang==='f_erz') {f_Lang = erz};
+if(f_Lang==='f_mok') {f_Lang = mok};
+
+
+if(localStorage["lanRegion"] == undefined) { } else { 
+if(Lang==='rus') {Lang = rus}; 
+if(Lang==='erz') {Lang = erz};
+if(Lang==='mok') {Lang = mok};
+if(Lang.length > 1) {
+ 
+
+
+$('#field2').val(function(x, y) {
+return f_Lang.reduce(function(cur, prev, i) {
+
+return cur.replace(new RegExp(prev, 'ig'), Lang[i]);
+
+}, y);  
+});
+};
+};
+
+};
+
+ //разделение текста
+ //конец разделения текста
+
+
+
+
+//начало
+
+$('document').ready(function govno(){
+    $('.translate_button').on('click', function (e){      
+        // отменяем стандартное действие при клике
+        
+        translate();
+
+alert(document.getElementsById('field2').data);
+        e.preventDefault();
+        // Получаем адрес страницы
+
+
+        var href = window.location.href;
+
+        // Передаем адрес страницы в функцию
+        getContent(href, true);
+    });
+});
+
+// Добавляем обработчик события popstate, 
+// происходящего при нажатии на кнопку назад/вперед в браузере  
+window.addEventListener("popstate", function(e) {
+    // Передаем текущий URL
+    getContent(location.pathname, false);
+});
+
+// Функция загрузки контента
+function getContent(url, addEntry) {
+    $.get(url).done(function(data) {
+        // Обновление только текстового содержимого в сером блоке
+      
+
+    $('#field2').val();
+
+
+    //$('#logo').html($(data).find("#logo").html());
+        // Если был выполнен клик в меню - добавляем запись в стек истории сеанса
+        // Если была нажата кнопка назад/вперед, добавлять записи в историю не надо
+
+        if(addEntry == true) {
+            // Добавляем запись в историю, используя pushState
+            var new_url=document.getElementById('field1').value;
+new_url=new_url.replace(/ /g,"_");
+window.history.pushState('', '', '?w='+new_url);
+        }
+   return h;
+
+    });
+
+};
+
+
+//конец функции
+
+
+
+
+
+
+
+</script>
+
+
+</head>
+<body>
+
+	<div id="wrapper">
+		<!-- Header страницы -->
+		<header>
+
+			<div class="cassing" id="logo"><img src="logo.png" alt="Этник"><span>Переводчик</span>
+			</div>
+
+
+		</header>
+		<!-- Основное содержимое страниц -->
+
+		<main>
+			<div class="cassing" id="text_fields">  
+				<div class="fields" id="first_text_field" >
+					<div id="left_field" tabindex="0">
+						<div class="top_panel">
+							<div class="left_buttons">
+								<button onclick="document.getElementById('field1').value='';"><i class="fa fa-times" aria-hidden="true"></i>
+									<span>Очистить</span></button>
+									<button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field1').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
+										<span>Прослушать</span></button>
+
+									</div>
+									<span class="lang_select_left">
+										<select id="selector_language">
+											<!--<option value="find">Определить язык</option>-->
+											<option value="f_rus">Русский</option>
+											<option value="f_erz">Эрьзянский</option>
+											<option value="f_mok">Мокшанский</option>
+										</select>
+
+									</span>
+								</div>
+								<textarea name="text" id="field1" cols="1" rows="1" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="5000" onkeypress="counter(this);" onKeyUp="counter(this);" onchange="counter(this);" virtual-keyboard ></textarea>
+								<div class="bottom_panel">
+									<div class="bottom_panel_block">
+										<button onclick="alert('пошел в жопу яндекс')"><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
+										<button onclick="if (this.lastElementChild.innerText=='Экранная клавиатура'){ this.lastElementChild.innerText = 'Скрыть экранную клавиатуру';document.getElementById('keyboard').firstElementChild.style.display='block';} 
+else {this.lastElementChild.innerText = 'Экранная клавиатура';document.getElementById('keyboard').firstElementChild.style.display='none'};" class="virtual-keyboard-hook" data-target-id="field1" data-keyboard-mapping="qwerty"><i class="fa fa-keyboard-o" aria-hidden="true"></i> <span>Экранная клавиатура</span></button>
+										<span id="symbol_count"></span>
+										</div>
+										<!--keyboard-->
+										<div id="keyboard">
+										</div>
+
+
+
+
+								</div>
+							</div>
+						</div>
+
+						<div id="reverse_block"><button><i class="fa fa-exchange" aria-hidden="true"></i></button></div>
+
+						<div class="fields" id="second_text_field">
+							<div id="right_field">
+								<div class="top_panel">
+									<span class="lang_select_right">
+										<select id="language">
+							
+											<option value="rus">Русский</option>
+											<option value="erz">Эрьзянский</option>
+											<option value="mok">Мокшанский</option>
+										</select>
+									</span>
+									<button class="translate_button" >Перевести <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+									<div class="right_buttons">
+										<button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field2').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
+											<span>Прослушать</span></button>
+											<button id="copyButton" onclick="copy()"
+											><i class="fa fa-clone" aria-hidden="true"></i> <span>Копировать</span></button>
+
+										</div>
+									</div>
+									<textarea name="text2" id="field2" readonly></textarea>
+									<div class="bottom_panel">
+											<div class="right_buttons_botton">
+												<button class="helptip" onclick="helptip(this)"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>Поделиться</span>
+
+<div id="soc_block">
+			<a href="http://vkontakte.ru/share.php?url=<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" onclick="window.open(this.href, 'vkontakte', 'width=600, height=400'); return false;" target="_blank" class="vk_s"></a>
+			<a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&amp;st.s=1&amp;st._surl=<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" onclick="window.open(this.href, 'odnoklassniki', 'width=600, height=400'); return false;" target="_blank" class="ok_s"></a>
+			<a href="http://www.facebook.com/sharer.php?u=<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>&t=MY_TITLE&src=sp" onclick="window.open(this.href, 'facebook', 'width=600, height=400'); return false;" target="_blank" class="fb_s"></a>
+			<a href="https://plus.google.com/share?url=<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" onclick="window.open(this.href, 'google', 'width=600, height=400'); return false;" target="_blank" class="gp_s"></a>
+			<a href="https://twitter.com/intent/tweet?text=<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" onclick="window.open(this.href, 'twitter', 'width=600, height=400'); return false;" target="_blank" class="tw_s"></a>
+			</div>
+			
+
+												</button>
+												<button><i class="fa fa-pencil" aria-hidden="true"></i><span> Предложить перевод</span></button>
+											</div>
+										
+									</div>
+								</div>			
+							</div>
+							<div id="dictionary_block">
+								<div class="dictionary" id="words_block_first">
+									<div id="words_content_left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur rerum sunt saepe, molestiae soluta similique maiores illum rem ut vitae, error. Veritatis eos, similique animi neque unde repellat error sapiente!</div>
+								</div>
+								<div class="dictionary" id="words_block_second">
+									<div id="words_content_right">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti dolore similique, quidem atque consequuntur, et unde ipsa iusto omnis repudiandae, officiis, mollitia. Consectetur impedit, non cupiditate at eligendi tempore aliquid!</div>
+								</div>
+							</div>
+						</div>
+
+
+
+
+
+					</main>
+
+
+					<!-- Подвал сайта -->
+					<footer>
+						<div id="bottom_menu">
+							<a href="" class="bottom_menu_links">Мобильная версия</a>
+							<a href="" class="bottom_menu_links">О переводчике "Этник"</a>
+							<a href="" class="bottom_menu_links">Отправить отзыв</a>
+
+						</div>
+						<div class="copyright cassing"><img src="unsonet_logo.png" alt="" height='32px'></div>
+					</footer>
+				</div>
+
+			</body>
+			</html
