@@ -29,20 +29,27 @@
 
 	<script src="virtual-keyboard.js"></script>
 	<!--rubber_field-->
-	<script type="text/javascript">
-		function(){
-			document.getElementById("field1").onkeyup = function(){
-				var getText = this.value;
-				var getRegs = getText.match(/^.*(\r\n|\n|$)/gim);
-				var setText = false;
-				for(var i = 0; i < getRegs.length; i++){
-					getText = getRegs[i].replace(/\r|\n/g, "");
-					setText += getText.length ? Math.ceil(getText.length / 50) : 1;
-				}
-				this.rows = setText;
-			};
-		};
-	</script>
+	<script language="javascript">
+
+function autosize(){
+    var text = $('#field1');
+
+    text.each(function(){
+        $(this).attr('rows',1);
+        resize($(this));
+    });
+
+    text.on('input', function(){
+        resize($(this));
+    });
+    
+    function resize ($text) {
+        $text.css('height', 'auto');
+        $text.css('height', $text[0].scrollHeight+'px');
+    }
+}	
+</script>
+
 	<!--symbol_counter-->
 	<script>
 		function counter(el)
@@ -53,11 +60,35 @@
 	}
 </script>
 
-
+<!--copy-->
 <script>
+function selectText(elementId) {
+var doc = document,
+text = doc.getElementById(elementId),
+range,
+selection;
+if (doc.body.createTextRange) {
+range = document.body.createTextRange();
+range.moveToElementText(text);
+range.select();
+} else if (window.getSelection) {
+selection = window.getSelection();
+range = document.createRange();
+range.selectNodeContents(text);
+selection.removeAllRanges();
+selection.addRange(range);
+}};
+
+function copy() {
+selectText('field2');
+document.execCommand("copy");
+};
+
+/* for textarea
 	function copy(text) {
-		var t = document.getElementById('field2')
-		t.innerHTML = text
+	
+		var t = document.getElementById("field2");
+		t.innerHTML = text;
 		t.select()
 		try {
 			var successful = document.execCommand('copy')
@@ -68,6 +99,7 @@
 		}
 		t.innerHTML = ''
 	}
+*/
 </script>
 
 <!--tooltip-->
@@ -122,11 +154,17 @@ erz: ['шумбрачи']
 
 
 function translate(){
-document.getElementById('field2').value=document.getElementById('field1').value;
+document.getElementById('field2').innerText=document.getElementById('field1').value;
 
-var rus = [0, 'Переводчик','Хлеб']; 
-var erz = [0, 'говно ерз', 'Кшэ'];  
-var mok = [0, 'говно мок', 'Сало']; 
+    
+    splitLines();
+    showLines();
+
+
+
+var rus = [0, 'переводчик','хлеб']; 
+var erz = [0, 'говно ерз', 'кшэ'];  
+var mok = [0, 'говно мок', 'сало']; 
 
 $('select#language').change(function() {
 lanRegion = $(this).val();
@@ -152,7 +190,7 @@ if(Lang.length > 1) {
  
 
 
-$('#field2').val(function(x, y) {
+$('#field2').html(function(x, y) {
 return f_Lang.reduce(function(cur, prev, i) {
 
 return cur.replace(new RegExp(prev, 'ig'), Lang[i]);
@@ -165,6 +203,54 @@ return cur.replace(new RegExp(prev, 'ig'), Lang[i]);
 };
 
  //разделение текста
+
+
+function showLines() {
+    var lines = getLines();
+    console.log(
+    lines.map(function (line) {
+        return line.map(function (span) {
+            return span.innerText;
+        }).join('')
+    }));
+}
+
+function splitLines() {
+    var p = document.querySelectorAll("#field2")[0];
+    p.innerHTML = p.innerText.split(/\. /g).map(function (word) {
+
+
+        return '<span class="parag">' + capitalizeFirstLetter(word) + '</span>'
+    }).join('. ');
+
+
+}
+
+
+
+function getLines() {
+    var lines = [];
+    var line;
+    var p = document.querySelectorAll("#field2")[0];
+    var words = p.getElementsByTagName('span');
+    var lastTop;
+    for (var i = 0; i < words.length; i++) {
+        var word = words[i];
+        if (word.offsetTop != lastTop) {
+            lastTop = word.offsetTop;
+            line = [];
+            lines.push(line);
+        }
+        line.push(word);
+    }
+    return lines;
+}
+
+
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
  //конец разделения текста
 
 
@@ -175,10 +261,9 @@ return cur.replace(new RegExp(prev, 'ig'), Lang[i]);
 $('document').ready(function govno(){
     $('.translate_button').on('click', function (e){      
         // отменяем стандартное действие при клике
-        
+    
         translate();
 
-alert(document.getElementsById('field2').data);
         e.preventDefault();
         // Получаем адрес страницы
 
@@ -203,7 +288,7 @@ function getContent(url, addEntry) {
         // Обновление только текстового содержимого в сером блоке
       
 
-    $('#field2').val();
+    $('#field2').text();
 
 
     //$('#logo').html($(data).find("#logo").html());
@@ -270,7 +355,7 @@ window.history.pushState('', '', '?w='+new_url);
 
 									</span>
 								</div>
-								<textarea name="text" id="field1" cols="1" rows="1" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="5000" onkeypress="counter(this);" onKeyUp="counter(this);" onchange="counter(this);" virtual-keyboard ></textarea>
+								<textarea name="text" id="field1" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="5000" onkeypress="autosize();counter(this);" onKeyUp="counter(this);" onchange="counter(this);" virtual-keyboard ></textarea>
 								<div class="bottom_panel">
 									<div class="bottom_panel_block">
 										<button onclick="alert('пошел в жопу яндекс')"><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
@@ -306,12 +391,14 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 									<div class="right_buttons">
 										<button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field2').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
 											<span>Прослушать</span></button>
-											<button id="copyButton" onclick="copy()"
-											><i class="fa fa-clone" aria-hidden="true"></i> <span>Копировать</span></button>
+											<button id="copyButton" 
+											 onclick="copy()"><i class="fa fa-clone" aria-hidden="true"></i> <span>Копировать</span></button>
 
 										</div>
 									</div>
-									<textarea name="text2" id="field2" readonly></textarea>
+									<div name="text2" id="field2"></div>
+									
+									<!--<textarea name="text2" id="field2" readonly></textarea>-->
 									<div class="bottom_panel">
 											<div class="right_buttons_botton">
 												<button class="helptip" onclick="helptip(this)"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>Поделиться</span>
@@ -334,10 +421,13 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 							</div>
 							<div id="dictionary_block">
 								<div class="dictionary" id="words_block_first">
-									<div id="words_content_left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur rerum sunt saepe, molestiae soluta similique maiores illum rem ut vitae, error. Veritatis eos, similique animi neque unde repellat error sapiente!</div>
+									<div id="words_content_left">
+										<h4>Похожие слова</h4>
+									Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur rerum sunt saepe, molestiae soluta similique maiores illum rem ut vitae, error. Veritatis eos, similique animi neque unde repellat error sapiente!</div>
 								</div>
 								<div class="dictionary" id="words_block_second">
-									<div id="words_content_right">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti dolore similique, quidem atque consequuntur, et unde ipsa iusto omnis repudiandae, officiis, mollitia. Consectetur impedit, non cupiditate at eligendi tempore aliquid!</div>
+									<div id="words_content_right">
+										<h4>Варианты перевода</h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti dolore similique, quidem atque consequuntur, et unde ipsa iusto omnis repudiandae, officiis, mollitia. Consectetur impedit, non cupiditate at eligendi tempore aliquid!</div>
 								</div>
 							</div>
 						</div>

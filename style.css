@@ -3,9 +3,17 @@ html {
 	background: #eee;
 	color:#000;
 	font-family: Tahoma,Geneva,sans-serif;
+height: 100%;
 }
 
-body{margin:0px !important;}
+body{margin:0px !important;height: 100%;}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 header,footer,main{
 	display: block;
 	float:left;
@@ -23,8 +31,9 @@ header,main {
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
     -moz-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
     box-shadow: 0px 0px 10px rgba(0,0,0,.8);}
+main{ flex: 1 0 auto;background: #fff;}
+footer{padding:25px;flex: 0 0 auto;}
 
-footer{padding:25px;}
 button{
 	cursor: pointer;
 	background:#fff;
@@ -150,7 +159,6 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
   -webkit-touch-callout: none; /* Disable Android and iOS callouts*/}
 
 #text_fields {
-	background: #fff;
 	padding-top:50px;
 	padding-bottom:50px;
 	float:left;
@@ -163,7 +171,7 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
 	display:block;
 	width:50%;
 	box-sizing: border-box;}
-.fields textarea {
+.fields textarea, #field2{
 	padding: 5px;
 	font-family: Tahoma,Geneva,sans-serif;
 	font-size:20px;
@@ -176,8 +184,10 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
 	max-width:100%;
 	border:0px;
 	resize: none;
-
 	}
+
+#field2{display:inline-block;}
+
 	.fields textarea:focus{outline: none;}
 #first_text_field, #words_block_first{padding-right: 25px;}
 #second_text_field, #words_block_second{padding-left:25px;}
@@ -254,3 +264,10 @@ margin:0px -25px -25px -25px;
 .gp_s{background: rgba(0, 0, 0, 0) url("soc/gp_s.png") no-repeat scroll center top / 32px 32px;}
 .tw_s{background: rgba(0, 0, 0, 0) url("soc/tw_s.png") no-repeat scroll center top / 32px 32px;}
 
+.parag{
+	display:inline;
+ text-transform: inherit;}
+.parag::first-letter {
+    text-transform: uppercase;
+}
+.parag:hover{background: #ccc;}
