@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Этник - Переводчик!</title>
+<title>Этник - Переводчик</title>
 
 	<link rel="icon" href=​"favicon.png" type="image/png">
 	<link rel="stylesheet" type="text/css" href="style.css?ver=<?php echo date(dmYHis);?>" >
@@ -23,6 +23,7 @@
 <meta name="twitter:title" content=""></meta> 
 <meta name="twitter:description" content=""></meta> 
 <meta name="twitter:image" content=""></meta>
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -146,26 +147,147 @@ function helptipx() {
 
 </script>
 
+<!--dictionaries-->
+<script src="dictionaries/rus.js?ver=<?php echo date(dmYHis);?>"></script>
+<script src="dictionaries/erz.js?ver=<?php echo date(dmYHis);?>"></script>
+<!--dictionaries-->
+
 <script type="text/javascript">
-var full_dictionary = {
-rus: ['привет', 'здравствуй', 'здравствуйте'],
-erz: ['шумбрачи']
+
+
+//тут был словарь 
+//var mok = [0, 'говно мок', 'сало','сало2']; 
+
+var f_Lang;
+
+function f_Lang_check(){
+f_Lang = $('#selector_language').val();
+//if(f_Lang==='find') {f_Lang = rus};
+if(f_Lang==='f_rus') {f_Lang = rus}; 
+if(f_Lang==='f_erz') {f_Lang = erz};
+if(f_Lang==='f_mok') {f_Lang = mok};
+return f_Lang;
 };
+
+//далее живой поиск, автозамена слов
+//f_Lang - массив со словами   
+//f_Lang.sort();
+  function down(obj) {
+    var reg = new RegExp('^' + lastWord(obj.value), 'i'),
+    t = document.getElementById('pod1'); 
+    var t2 = document.getElementById('pod2');
+    var t3 = document.getElementById('pod3');
+    var t4 = document.getElementById('pod4');
+    var t5 = document.getElementById('pod5');
+    t.innerHTML = '';
+    t2.innerHTML = '';
+    t3.innerHTML = '';
+    t4.innerHTML = '';
+    t5.innerHTML = '';
+    t.style.display = "none";
+    t2.style.display = "none";
+    t3.style.display = "none";
+    t4.style.display = "none";
+    t5.style.display = "none";
+    document.getElementById('autocomplete_words').style.visibility = "visible";
+     
+    if (lastWord(obj.value.length) > 0)
+    for (var i = 0; i < f_Lang.length; i++) {
+    //какого хера тут треугольные числа
+    if (reg.test(f_Lang[i])) {
+    t.innerHTML = f_Lang[i]; 
+    
+    t.style.display = "block";
+
+        }
+  else if (reg.test(f_Lang[i+1])) {
+    t2.innerHTML = f_Lang[i+1]; 
+     t2.style.display = "block";
+
+        }
+    else if (reg.test(f_Lang[i+3])) {
+    t3.innerHTML = f_Lang[i+3]; 
+     t3.style.display = "block";
+ 
+        }
+        
+         else if (reg.test(f_Lang[i+6])) {
+    t4.innerHTML = f_Lang[i+6]; 
+     t4.style.display = "block";
+
+        }
+         else if (reg.test(f_Lang[i+10])) {
+    t5.innerHTML = f_Lang[i+10]; 
+     t5.style.display = "block";
+        }; 
+      
+      
+    };
+    
+    $(function(){
+var original = [];
+$('.words_hints').each(function() {
+    var thisText = $(this).text();
+    if (original[thisText]){
+        $(this).css('display', 'none');}
+    else{
+        original[thisText] = true;}
+});
+});
+   
+ };
+ 
+ var lastWord = function(o) {
+  return (""+o).replace(/[\s-]+$/,'').split(/[\s-]/).pop();
+};
+/*
+lastWord('This is a test.'); // => 'test.'
+lastWord('Here is something to-do.'); // => 'do.'
+*/
+
+ function ReplaceLastWord(str, newStr) {
+   return str.replace(/\s\S+$/, newStr);
+}
+/*
+var str = 'I like my dog'; 
+var newEndStr = 'cat'; 
+console.log(ReplaceLastWord(str, newEndStr)); // => I like my cat
+*/
+ function setFocus(){
+      document.getElementById("field1").focus();
+ }
+ var words_counter;
+ function calc_words()
+{
+     val = $.trim($("#field1").val()).split(/\s+/g);
+     words_counter=$.grep(val,function (str) { return $.trim(str).length>0; }).length;
+     return words_counter;
+}
+ 
+ function word_paste(ids) {
+
+ if(words_counter>1){
+
+    var a = document.getElementById('field1').value = ReplaceLastWord(document.getElementById('field1').value,  ' ' + ids.innerHTML);
+    document.getElementById('autocomplete_words').style.visibility = "hidden";
+    setFocus();
+ }
+ else {   var a = document.getElementById('field1').value = ids.innerHTML;
+    document.getElementById('autocomplete_words').style.visibility = "hidden";
+     setFocus();
+};
+}
+//конец живого поиска
+
+
+
+
 
 
 function translate(){
 document.getElementById('field2').innerText=document.getElementById('field1').value;
 
     
-    splitLines();
-    showLines();
-
-
-
-var rus = [0, 'переводчик','хлеб']; 
-var erz = [0, 'говно ерз', 'кшэ'];  
-var mok = [0, 'говно мок', 'сало']; 
-
 $('select#language').change(function() {
 lanRegion = $(this).val();
 localStorage.removeItem("lanRegion"); // Мало ли xD 
@@ -175,12 +297,6 @@ localStorage.setItem('lanRegion', ''+lanRegion+'');
 Lang = localStorage.getItem("lanRegion");
 $('#language option[value="'+Lang+'"]').attr('selected', 'selected');
 
-f_Lang = $('#selector_language').val();
-//if(f_Lang==='find') {f_Lang = rus};
-if(f_Lang==='f_rus') {f_Lang = rus}; 
-if(f_Lang==='f_erz') {f_Lang = erz};
-if(f_Lang==='f_mok') {f_Lang = mok};
-
 
 if(localStorage["lanRegion"] == undefined) { } else { 
 if(Lang==='rus') {Lang = rus}; 
@@ -188,12 +304,13 @@ if(Lang==='erz') {Lang = erz};
 if(Lang==='mok') {Lang = mok};
 if(Lang.length > 1) {
  
-
+//далее проблема сложносоставных слов
 
 $('#field2').html(function(x, y) {
 return f_Lang.reduce(function(cur, prev, i) {
 
-return cur.replace(new RegExp(prev, 'ig'), Lang[i]);
+
+return cur.replace(new RegExp( prev, 'ig'), Lang[i]);
 
 }, y);  
 });
@@ -203,7 +320,6 @@ return cur.replace(new RegExp(prev, 'ig'), Lang[i]);
 };
 
  //разделение текста
-
 
 function showLines() {
     var lines = getLines();
@@ -218,15 +334,10 @@ function showLines() {
 function splitLines() {
     var p = document.querySelectorAll("#field2")[0];
     p.innerHTML = p.innerText.split(/\. /g).map(function (word) {
-
-
         return '<span class="parag">' + capitalizeFirstLetter(word) + '</span>'
     }).join('. ');
 
-
 }
-
-
 
 function getLines() {
     var lines = [];
@@ -247,7 +358,7 @@ function getLines() {
 }
 
 
-
+//заглавные буквы
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -259,11 +370,14 @@ function capitalizeFirstLetter(string) {
 //начало
 
 $('document').ready(function govno(){
+	f_Lang_check();
     $('.translate_button').on('click', function (e){      
         // отменяем стандартное действие при клике
     
-        translate();
 
+        translate();
+splitLines();
+    showLines();
         e.preventDefault();
         // Получаем адрес страницы
 
@@ -298,6 +412,7 @@ function getContent(url, addEntry) {
         if(addEntry == true) {
             // Добавляем запись в историю, используя pushState
             var new_url=document.getElementById('field1').value;
+            new_url=new_url.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
 new_url=new_url.replace(/ /g,"_");
 window.history.pushState('', '', '?w='+new_url);
         }
@@ -312,12 +427,7 @@ window.history.pushState('', '', '?w='+new_url);
 
 
 
-
-
-
-
 </script>
-
 
 </head>
 <body>
@@ -346,19 +456,29 @@ window.history.pushState('', '', '?w='+new_url);
 
 									</div>
 									<span class="lang_select_left">
-										<select id="selector_language">
+										<select id="selector_language" onchange="f_Lang_check()">
 											<!--<option value="find">Определить язык</option>-->
 											<option value="f_rus">Русский</option>
 											<option value="f_erz">Эрьзянский</option>
-											<option value="f_mok">Мокшанский</option>
+											<!--<option value="f_mok">Мокшанский</option>-->
 										</select>
 
 									</span>
 								</div>
-								<textarea name="text" id="field1" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="5000" onkeypress="autosize();counter(this);" onKeyUp="counter(this);" onchange="counter(this);" virtual-keyboard ></textarea>
+								<textarea name="text" id="field1" oninput="down(this)" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="5000" onkeypress="autosize();counter(this);" onKeyUp="counter(this);calc_words();" onchange="counter(this);" virtual-keyboard ></textarea>
+
+<div id="autocomplete_words">
+<span class="words_hints" id="pod1" onclick="word_paste(this)"></span>
+<span class="words_hints" id="pod2" onclick="word_paste(this)"></span>
+<span class="words_hints" id="pod3" onclick="word_paste(this)"></span>
+<span class="words_hints" id="pod4" onclick="word_paste(this)"></span>
+<span class="words_hints" id="pod5" onclick="word_paste(this)"></span>
+</div>
+
+
 								<div class="bottom_panel">
 									<div class="bottom_panel_block">
-										<button onclick="alert('пошел в жопу яндекс')"><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
+										<button onclick="alert('функция в разработке');"><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
 										<button onclick="if (this.lastElementChild.innerText=='Экранная клавиатура'){ this.lastElementChild.innerText = 'Скрыть экранную клавиатуру';document.getElementById('keyboard').firstElementChild.style.display='block';} 
 else {this.lastElementChild.innerText = 'Экранная клавиатура';document.getElementById('keyboard').firstElementChild.style.display='none'};" class="virtual-keyboard-hook" data-target-id="field1" data-keyboard-mapping="qwerty"><i class="fa fa-keyboard-o" aria-hidden="true"></i> <span>Экранная клавиатура</span></button>
 										<span id="symbol_count"></span>
@@ -382,9 +502,9 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 									<span class="lang_select_right">
 										<select id="language">
 							
-											<option value="rus">Русский</option>
+											<option value="rus" selected>Русский</option>
 											<option value="erz">Эрьзянский</option>
-											<option value="mok">Мокшанский</option>
+											<!--<option value="mok">Мокшанский</option>-->
 										</select>
 									</span>
 									<button class="translate_button" >Перевести <i class="fa fa-chevron-right" aria-hidden="true"></i></button>

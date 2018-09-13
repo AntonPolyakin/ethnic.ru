@@ -20,7 +20,7 @@ header,footer,main{
 	width:100%;
 	box-sizing: border-box;}
 header {
-	background: #eee;
+	background: #a33;
  /*   background: -webkit-gradient(linear, left top, left bottom, from(#323232), to(#000));
     background: -moz-linear-gradient(top,   #323232,    #000);
 */	border-bottom: thick solid #fff;
@@ -187,8 +187,9 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
 	}
 
 #field2{display:inline-block;}
-
+#field1{min-height: 164px;}
 	.fields textarea:focus{outline: none;}
+
 #first_text_field, #words_block_first{padding-right: 25px;}
 #second_text_field, #words_block_second{padding-left:25px;}
 #dictionary_block {
@@ -224,7 +225,11 @@ padding:10px;}
 	width:auto;}
 .right_buttons_botton{padding:5px;}
 .left_buttons{float: left;}
-#bottom_menu {margin:0 auto;width:max-content;padding-bottom: 15px;color:#fff;}
+#bottom_menu {margin: 0 auto;
+    width: 100%;
+    padding-bottom: 15px;
+    color: #fff;
+    text-align: center;}
 #bottom_menu a{color:#000;text-decoration: none;padding-left:10px; padding-right: 10px;}
 #bottom_menu a:hover{text-decoration: underline; }
 #reverse_block {
@@ -271,3 +276,22 @@ margin:0px -25px -25px -25px;
     text-transform: uppercase;
 }
 .parag:hover{background: #ccc;}
+
+
+.words_hints
+{  
+   border-radius: 3px;
+    text-align: center;    
+background:#f4f4f4;
+   display: none;
+   width:auto;
+   margin-right:5px;
+   float: left;
+   cursor: pointer !important;
+   padding:5px;
+}
+.words_hints:hover{background: #eee}
+#autocomplete_words {
+	padding: 6px;
+    min-height: 39px;
+    box-sizing: border-box;}
