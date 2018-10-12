@@ -150,13 +150,14 @@ function helptipx() {
 <!--dictionaries-->
 <script src="dictionaries/rus.js?ver=<?php echo date(dmYHis);?>"></script>
 <script src="dictionaries/erz.js?ver=<?php echo date(dmYHis);?>"></script>
-<!--dictionaries-->
+<!--/dictionaries-->
 
 <script type="text/javascript">
 
 
 //тут был словарь 
-//var mok = [0, 'говно мок', 'сало','сало2']; 
+//var rus = [0, 'хлеб', 'село','кошка','друг', 'село']; 
+//var erz = [0, 'кше', 'веле','катка','ялга', 'велесь']; 
 
 var f_Lang;
 
@@ -306,19 +307,45 @@ if(Lang.length > 1) {
  
 //далее проблема сложносоставных слов
 
-$('#field2').html(function(x, y) {
-return f_Lang.reduce(function(cur, prev, i) {
+$('#field2').html(function(x, y) { 
+
+//y=y.split(/\s* \s*/); only spaces 
+y= y.match(/[A-Za-z0-9а-яА-Я]+|./g);
 
 
-return cur.replace(new RegExp( prev, 'ig'), Lang[i]);
+return y.reduce(function(arr, item, ci) { 
+	if (item.length>0){
+f_Lang.reduce(function(previousValue, prev, i, cur) { 
+/*if (i==2636){
+alert('массив: '+cur 
++'\n ар: '+typeof arr[0]
++'\n итем: '+item
++'\n посл: '+previousValue 
++'\n прев: '+prev
+); 
+}*/
+if ((''+item).toLowerCase()!==(''+prev).toLowerCase()){
+return item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]);
+} else {
 
-}, y);  
-});
+if (typeof arr[ci]=='object'){
+	
+return arr[ci].push(item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]));
+}else {
+return arr[ci] = [item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
+}
+
+}
+
+}, 0); 
+}
+
+return arr;
+}, y); 
+}); 
+}; 
+}; 
 };
-};
-
-};
-
  //разделение текста
 
 function showLines() {
@@ -416,7 +443,6 @@ function getContent(url, addEntry) {
 new_url=new_url.replace(/ /g,"_");
 window.history.pushState('', '', '?w='+new_url);
         }
-   return h;
 
     });
 
@@ -436,10 +462,13 @@ window.history.pushState('', '', '?w='+new_url);
 		<!-- Header страницы -->
 		<header>
 
-			<div class="cassing" id="logo"><img src="logo.png" alt="Этник"><span>Переводчик</span>
+			<div id="logo"><span>Переводчик</span>
 			</div>
 
-
+<div id="follow_block">
+	<i class="fa fa-github" aria-hidden="true"></i>
+<i class="fa fa-vk" aria-hidden="true"></i>
+</div>
 		</header>
 		<!-- Основное содержимое страниц -->
 
@@ -447,14 +476,8 @@ window.history.pushState('', '', '?w='+new_url);
 			<div class="cassing" id="text_fields">  
 				<div class="fields" id="first_text_field" >
 					<div id="left_field" tabindex="0">
-						<div class="top_panel">
-							<div class="left_buttons">
-								<button onclick="document.getElementById('field1').value='';"><i class="fa fa-times" aria-hidden="true"></i>
-									<span>Очистить</span></button>
-									<button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field1').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
-										<span>Прослушать</span></button>
+						<div class="top_panel_left">
 
-									</div>
 									<span class="lang_select_left">
 										<select id="selector_language" onchange="f_Lang_check()">
 											<!--<option value="find">Определить язык</option>-->
@@ -464,6 +487,15 @@ window.history.pushState('', '', '?w='+new_url);
 										</select>
 
 									</span>
+
+							<div class="left_buttons">
+								<button onclick="document.getElementById('field1').value='';"><i class="fa fa-times" aria-hidden="true"></i>
+									<span>Очистить</span></button>
+									<button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field1').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
+										<span>Прослушать</span></button>
+
+									</div>
+									
 								</div>
 								<textarea name="text" id="field1" oninput="down(this)" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="5000" onkeypress="autosize();counter(this);" onKeyUp="counter(this);calc_words();" onchange="counter(this);" virtual-keyboard ></textarea>
 
@@ -478,9 +510,11 @@ window.history.pushState('', '', '?w='+new_url);
 
 								<div class="bottom_panel">
 									<div class="bottom_panel_block">
+
+										<div class="left_buttons_botton">
 										<button onclick="alert('функция в разработке');"><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
 										<button onclick="if (this.lastElementChild.innerText=='Экранная клавиатура'){ this.lastElementChild.innerText = 'Скрыть экранную клавиатуру';document.getElementById('keyboard').firstElementChild.style.display='block';} 
-else {this.lastElementChild.innerText = 'Экранная клавиатура';document.getElementById('keyboard').firstElementChild.style.display='none'};" class="virtual-keyboard-hook" data-target-id="field1" data-keyboard-mapping="qwerty"><i class="fa fa-keyboard-o" aria-hidden="true"></i> <span>Экранная клавиатура</span></button>
+else {this.lastElementChild.innerText = 'Экранная клавиатура';document.getElementById('keyboard').firstElementChild.style.display='none'};" class="virtual-keyboard-hook" data-target-id="field1" data-keyboard-mapping="qwerty"><i class="fa fa-keyboard-o" aria-hidden="true"></i> <span>Экранная клавиатура</span></button></div>
 										<span id="symbol_count"></span>
 										</div>
 										<!--keyboard-->
@@ -498,7 +532,7 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 
 						<div class="fields" id="second_text_field">
 							<div id="right_field">
-								<div class="top_panel">
+								<div class="top_panel_right">
 									<span class="lang_select_right">
 										<select id="language">
 							
@@ -507,7 +541,7 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 											<!--<option value="mok">Мокшанский</option>-->
 										</select>
 									</span>
-									<button class="translate_button" >Перевести <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+									
 									<div class="right_buttons">
 										<button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field2').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
 											<span>Прослушать</span></button>
@@ -515,8 +549,11 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 											 onclick="copy()"><i class="fa fa-clone" aria-hidden="true"></i> <span>Копировать</span></button>
 
 										</div>
+
+<button class="translate_button" >Перевести <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+
 									</div>
-									<div name="text2" id="field2"></div>
+									<div name="text2" id="field2" contenteditable="false" ></div>
 									
 									<!--<textarea name="text2" id="field2" readonly></textarea>-->
 									<div class="bottom_panel">

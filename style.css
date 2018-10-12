@@ -25,7 +25,6 @@ header {
     background: -moz-linear-gradient(top,   #323232,    #000);
 */	border-bottom: thick solid #fff;
 	position: relative;
-	
 }
 header,main {
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,.8);
@@ -41,6 +40,7 @@ button{
 	padding:6px;
 	border:1px solid #a7a7a7;
 	outline-color: #FFB0B0 ;
+	min-width: 30px;
 	}
 button i{color:#7f7f7f;}
 button, select{	
@@ -68,9 +68,10 @@ button.translate_button{
 		text-decoration: none;
 		text-shadow:0px 1px 0px #fff;
 		border:1px solid #a7a7a7;
-		width: 145px;
+		width: 150px;
 		box-shadow: 0px 2px 1px white inset, 0px -2px 8px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
 		-webkit-transition:box-shadow 0.5s;
+		margin: 5px;
 	}
 	button.translate_button i{
 		float: right;
@@ -86,7 +87,7 @@ button.translate_button{
 /*button*/
 /*select*/
 select {
-	width: 200px;
+	width: 180px;
 	border-radius: 2px;
 	padding: 6px 35px 6px 6px;
 	border: 1px solid #a7a7a7;
@@ -124,20 +125,36 @@ background: #FFB0B0; /* Firefox */
 
 
 #logo {
-	width: 100%;
+	margin-left:50px;
+	cursor:pointer;
+	float: left;
+	background: url('logo.png') no-repeat scroll 0% 50%;
+background-size: 100px
 }
 #logo span {
-	font-weight: bold; 
+	box-sizing: border-box;
+	padding-left:100%;
+	font-family: arial;
 	font-size:20px;
 	display:block;
 	top:10px;
 	float:left;
-	line-height: 64px;
+	line-height: 50px;
 	color:#fff;
-text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
+text-shadow: 2px 2px 2px rgba(0,0,0,.2);}
 #logo img {
 	display: block;
 	float:left;}
+
+#follow_block{
+	line-height: 50px;
+	font-size:30px;
+	color:white;
+	display: block;
+	box-sizing: border-box;
+	float:right;
+	margin-right:50px;}
+#follow_block i{padding:5px;cursor:pointer;}
 .cassing {
 	padding-left:50px;
 	padding-right:50px;
@@ -151,7 +168,7 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
 .copyright img{
 	display:block;
 	margin:0 auto;}
-	footer,header,.top_panel,.bottom_panel{
+	footer,header,.top_panel_left,.top_panel_right,.bottom_panel{
 -moz-user-select: none; /* Firefox */
       -ms-user-select: none; /* Internet Explorer */
    -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
@@ -198,33 +215,37 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.4);}
 	width:100%;
 	box-sizing: border-box;}
 .dictionary {padding-top:10px;}
-.top_panel, .bottom_panel,#left_field,#right_field,#words_content_left, #words_content_right {
+.top_panel_left,.bottom_panel,#left_field,#right_field,#words_content_left, #words_content_right {
 	width:100%;
 	display:block;
 	float:left;
 box-sizing:border-box;}
+.top_panel_right{width:100%;
+	display:block;
+	float:right;
+box-sizing:border-box;}
 #words_content_left, #words_content_right {
 	background:#f4f4f4;
 padding:10px;}
-.top_panel,.bottom_panel_block{
-	padding:5px;
-}
+
 #left_field,#right_field {
 	background: #fff;
 	border:1px solid #a7a7a7;
 -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
 	box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
--webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-	-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+-webkit-transition:border-color ease-out .15s,-webkit-box-shadow ease-out .15s;
+	-o-transition:border-color ease-out .15s,box-shadow ease-out .15s;
+	transition:border-color ease-out .15s,box-shadow ease-out .15s;
 }
-#symbol_count{color:gray;font-size:12px;line-height:30px;}
+#symbol_count{padding: 5px;color:gray;font-size:12px;line-height:30px;}
 .lang_select_left,.right_buttons,#symbol_count, .right_buttons_botton{float:right;}
 .left_buttons,.right_buttons{
 	display: block;
 	width:auto;}
-.right_buttons_botton{padding:5px;}
-.left_buttons{float: left;}
+.left_buttons_botton,.right_buttons_botton,
+.left_buttons,.right_buttons,
+.lang_select_left,.lang_select_right{padding:5px;box-sizing:border-box;}
+.lang_select_right,.left_buttons_botton,.left_buttons{float: left;}
 #bottom_menu {margin: 0 auto;
     width: 100%;
     padding-bottom: 15px;
@@ -233,16 +254,16 @@ padding:10px;}
 #bottom_menu a{color:#000;text-decoration: none;padding-left:10px; padding-right: 10px;}
 #bottom_menu a:hover{text-decoration: underline; }
 #reverse_block {
-	padding:5px;
-	float:left;
-	width:50px;
-	box-sizing: border-box;
-position: relative;
-margin:0px -25px -25px -25px;
+	padding: 5px;
+    float: left;
+    width: auto;
+    box-sizing: border-box;
+    position: relative;
+    margin: 0px -20px 0px -20px;
 }
 #reverse_block button {width:100%;box-sizing:border-box;}
 
-#keyboard{padding:0px;}
+#keyboard{padding:0px;float: left;  width: 100%;}
 .actions-container {display: none!important;}
 
 .helptip div {
@@ -295,3 +316,86 @@ background:#f4f4f4;
 	padding: 6px;
     min-height: 39px;
     box-sizing: border-box;}
+
+
+
+
+
+    /* Large desktops and laptops */
+@media (min-width: 1200px) {
+
+}
+
+/* Portrait tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/* Portrait tablets and small desktops (min-width: 768px) and  */
+@media (max-width: 991px) {
+button span {display: none}
+.lang_select_left,.lang_select_right{margin:0px;}
+
+#bottom_menu a{display:block;width:auto;padding:10px;} 
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 768px) {
+select,button.translate_button {width:100%;margin:0px;}
+header {height:50px;}
+#logo {
+    margin-left: 5px;}
+ #follow_block {margin-right:5px;}
+
+	.fields {width:100%;}
+	.cassing {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+#first_text_field, #words_block_first {
+    padding-right: 0px;
+}
+#second_text_field, #words_block_second {
+    padding-left: 0px;
+}
+#text_fields {
+    padding-top: 0;
+    padding-bottom: 0;}
+
+.dictionary {width:100%;padding-top:0px;}
+
+#left_field, #right_field{border:0px;}
+
+
+.top_panel_left,.top_panel_right{width:50%;}
+
+.top_panel_right{position:absolute;top: 50px;
+    right: 0;}
+.lang_select_left{width:90%;float:left;}
+.lang_select_right{width:90%;float:right;}
+#reverse_block {
+	box-sizing: content-box;
+	margin:auto; 
+	width:10%;
+	position: absolute; 
+	top:50px;
+	left:50%;
+	margin-left:-5%; 
+	padding: 5px 0px 0px 0px; 
+}
+#reverse_block button {min-width: 10%;}
+#field2 {min-height: 0px;}
+button.translate_button {
+	position: absolute;
+    width: 90%;
+    bottom: 0px;
+    margin-bottom: 5px;
+    right: 55%;
+}
+}
+
+/* Landscape phones and smaller */
+@media (max-width: 480px) {
+
+}
+
