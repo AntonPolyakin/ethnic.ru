@@ -237,7 +237,7 @@ padding:10px;}
 	-o-transition:border-color ease-out .15s,box-shadow ease-out .15s;
 	transition:border-color ease-out .15s,box-shadow ease-out .15s;
 }
-#symbol_count{padding: 5px;color:gray;font-size:12px;line-height:30px;}
+#symbol_count{padding: 12px;color:gray;font-size:12px;}
 .lang_select_left,.right_buttons,#symbol_count, .right_buttons_botton{float:right;}
 .left_buttons,.right_buttons{
 	display: block;
@@ -316,6 +316,75 @@ background:#f4f4f4;
 	padding: 6px;
     min-height: 39px;
     box-sizing: border-box;}
+
+
+
+
+/*
+        для пользователей Safari, Chrome и Opera приятный бонус — стилизованный скролл-бар. 
+*/
+::-webkit-scrollbar {
+	background: transparent;
+	width: 0.5em;
+	position: absolute;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+	position: absolute;
+	z-index: -2;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 100px;
+	background: #888;
+}
+
+ul.selectMenuBox {
+  text-align:center;
+  margin: 0px;
+ padding: 0px;
+ background: #fff;
+ transition: .3s;
+ width: max-content;
+ height: max-content;
+ max-height:200px;
+ overflow-y: auto;
+ overflow-x: hidden !important;
+ display: block;
+
+}
+ul.selectMenuBox > li {
+  padding:5px;
+	display: block;
+	cursor: pointer;
+}
+ul.selectMenuBox > li.option {
+	color: gray;
+}
+ul.selectMenuBox > li.option:hover {
+	color: #333;
+	background: #e1e1e1;
+	transition: .2s;
+}
+
+
+.word-hint {
+	  background-color: #fff;
+	  border: 1px solid #aaa;
+	  border-radius: 10px;
+	  display: none;
+	  padding: 5px 10px;
+	  position: absolute;
+	  width: max-content;
+	  z-index: 99;
+	}
+
+	.word-show-hint {
+		cursor: pointer;
+		border-bottom: dashed 1px;
+		color: #8c0000;
+	}
+
+
 
 
 

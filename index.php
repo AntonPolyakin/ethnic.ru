@@ -26,7 +26,7 @@
 
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 
 	<script src="virtual-keyboard.js"></script>
 	<!--rubber_field-->
@@ -151,6 +151,7 @@ function helptipx() {
 <script src="dictionaries/rus.js?ver=<?php echo date(dmYHis);?>"></script>
 <script src="dictionaries/erz.js?ver=<?php echo date(dmYHis);?>"></script>
 <!--/dictionaries-->
+
 
 <script type="text/javascript">
 
@@ -283,8 +284,6 @@ console.log(ReplaceLastWord(str, newEndStr)); // => I like my cat
 
 
 
-
-
 function translate(){
 document.getElementById('field2').innerText=document.getElementById('field1').value;
 
@@ -311,10 +310,12 @@ $('#field2').html(function(x, y) {
 
 //y=y.split(/\s* \s*/); only spaces 
 y= y.match(/[A-Za-z0-9а-яА-Я]+|./g);
+var newArr; 
 
+newArr = y.reduce(function(arr, item, ci) { 
 
-return y.reduce(function(arr, item, ci) { 
-	if (item.length>0){
+	if (item.match(/[A-Za-z0-9а-яА-Я]/)){
+		
 f_Lang.reduce(function(previousValue, prev, i, cur) { 
 /*if (i==2636){
 alert('массив: '+cur 
@@ -329,23 +330,56 @@ return item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]);
 } else {
 
 if (typeof arr[ci]=='object'){
-	
 return arr[ci].push(item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]));
 }else {
 return arr[ci] = [item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
 }
-
 }
-
 }, 0); 
 }
 
 return arr;
+
 }, y); 
+
+
+var generateList = function(items) {
+  return items.reduce((ul, item) => {
+    var li = document.createElement('li');
+    li.className = "option";
+    if (!Array.isArray(item)) {
+      li.innerText = item;
+    } else {
+      var new_ul = generateList(item);
+      li.appendChild(new_ul);
+    }
+
+    ul.appendChild(li);
+    return ul;
+  }, document.createElement('ul'));
+}
+
+
+var fieldContent = '';
+newArr.reduce(function(mas, newItem, i) { 
+if (newArr[i][1]==undefined){
+		return fieldContent = fieldContent+ '<span>' + newItem +'</span>' ;
+	}else {	
+		return fieldContent = fieldContent+
+'<span id="word-'+i+'" class="word-show-hint" data-hint="#word-hint-'+i+'">'+newArr[i][0]+'</span>'+'<div id="word-hint-'+i+'" class="word-hint"><ul class="selectMenuBox">'+generateList(newItem).innerHTML+'</ul></div>';
+	}
+
+}, y); 
+
+return fieldContent;
+
 }); 
 }; 
 }; 
 };
+
+
+
  //разделение текста
 
 function showLines() {
@@ -398,13 +432,49 @@ function capitalizeFirstLetter(string) {
 
 $('document').ready(function govno(){
 	f_Lang_check();
+
+
+
     $('.translate_button').on('click', function (e){      
         // отменяем стандартное действие при клике
     
 
         translate();
-splitLines();
-    showLines();
+
+
+//tooltip and select box
+$(function () {
+	  $('.word-show-hint').on("click", function(e){ 
+	  	e = e || window.event; 
+	  	e.preventDefault();
+	  	var ypos = $(this).offset().top+25;
+	  	var xpos = $(this).offset().left;
+	  	var WordHint =  $(this).data('hint');
+    	var WordId = $(this).attr('id');
+	  	$(WordHint).css('top',ypos);
+	  	$(WordHint).css('left',xpos);
+	  	$(WordHint).toggle('fast');         
+	  	return false; 
+	  	
+
+	  	});
+      
+$('ul.selectMenuBox > li.option').click(function() { 
+      
+      	var parentId = $(this).parents(":eq(1)").attr('id').replace('hint-', ''); 
+       $('#'+parentId).text($(this).text());
+      });
+
+      document.onclick = function(e){ 
+	  	if ($(e.target).hasClass('word-hint')==false) 
+	  	$('.word-hint').hide('fast');
+	  	return;
+	  }          
+	});
+
+//end tooltip and select box        
+//splitLines();
+//    showLines();
         e.preventDefault();
         // Получаем адрес страницы
 
