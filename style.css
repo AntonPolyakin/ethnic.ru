@@ -56,9 +56,13 @@ button:active, select:active{
     box-shadow: none;
 }
 
+button:disabled,
+button[disabled]{
+	opacity: 0.5;
+	cursor: not-allowed;}
 
 /*button*/
-button.translate_button{
+.translate_button{
 	outline:none;
 		background: #ECECEC;
 		border-radius: 2px;
@@ -73,14 +77,14 @@ button.translate_button{
 		-webkit-transition:box-shadow 0.5s;
 		margin: 5px;
 	}
-	button.translate_button i{
+	.translate_button i{
 		float: right;
 		margin-top: 2px;
 	}
-	button.translate_button:hover{
+	.translate_button:hover{
 		box-shadow: 0px 2px 1px white inset, 0px -2px 20px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
 	}
-	button.translate_button:active{
+	.translate_button:active{
 		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) inset, 0px -2px 20px white, 0px 1px 5px rgba(0, 0, 0, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.1);
 		background:-webkit-linear-gradient(top, #d1d1d1 0%,#ECECEC 100%);
 	}
@@ -123,6 +127,37 @@ background: #FFB0B0; /* Safari */
 background: #FFB0B0; /* Firefox */
 }
 
+input[type=text] {
+	font: 400 13.3333px Arial;
+	width:100%;
+	box-sizing: border-box;
+	padding:5px; 
+	border:1px solid #ccc; 
+-webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin: 5px;
+}
+input[type=text]:focus {
+	-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+-webkit-transition:border-color ease-out .15s,-webkit-box-shadow ease-out .15s;
+	-o-transition:border-color ease-out .15s,box-shadow ease-out .15s;
+	transition:border-color ease-out .15s,box-shadow ease-out .15s;
+	outline: #FFB0B0; }
+.feedfield{
+	font: 400 13.3333px Arial;
+	box-sizing: border-box;
+	width:100%;
+	min-width:100%;
+	max-width:100%;
+	padding: 5px;
+	border:1px solid #ccc; 
+-webkit-border-radius: 5px;
+    border-radius: 5px;
+margin: 5px;
+min-height:50px; }
+.feedfield:focus{outline: thick solid #FFB0B0;}
+
 
 #logo {
 	margin-left:50px;
@@ -155,6 +190,7 @@ text-shadow: 2px 2px 2px rgba(0,0,0,.2);}
 	float:right;
 	margin-right:50px;}
 #follow_block i{padding:5px;cursor:pointer;}
+#follow_block a{color:white;text-decoration: none;}
 .cassing {
 	padding-left:50px;
 	padding-right:50px;
@@ -225,6 +261,7 @@ box-sizing:border-box;}
 	float:right;
 box-sizing:border-box;}
 #words_content_left, #words_content_right {
+	visibility: hidden;
 	background:#f4f4f4;
 padding:10px;}
 
@@ -237,6 +274,7 @@ padding:10px;}
 	-o-transition:border-color ease-out .15s,box-shadow ease-out .15s;
 	transition:border-color ease-out .15s,box-shadow ease-out .15s;
 }
+
 #symbol_count{padding: 12px;color:gray;font-size:12px;}
 .lang_select_left,.right_buttons,#symbol_count, .right_buttons_botton{float:right;}
 .left_buttons,.right_buttons{
@@ -384,9 +422,79 @@ ul.selectMenuBox > li.option:hover {
 		color: #8c0000;
 	}
 
+::-webkit-progress-bar {
+    background: #eee;
+}
+::-webkit-progress-value {
+    background: #a7a7a7;
+}
+::-moz-progress-bar {
+    background: #a7a7a7;
+}
+progress {
+    display: block;
+    color: #a7a7a7;
+    background: #eee;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 50%;
+    height: 25px;
+    line-height: 21px;
+    font-size: 15px;
+    font-family: sans-serif;
+    text-align: center;
+    position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  max-width: 50%;
+}
 
+/*--modal window--*/
+        #mask{
+        	z-index: 1;
+        position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+        display:none; /* don't show it '*/
 
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+        /* styling bellow */
+        background-color: gray;
+        overflow-y: auto;
+    }
 
+    .modal_window{
+    	box-sizing: border-box;
+    	z-index: 2;
+        position:absolute; /* important so we can position it on center later */
+        display:none; /* don't show it */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-width:50%;
+    height:max-content;
+    margin: auto;
+        /* styling bellow */
+        color:white;
+    }
+
+    /* style a specific modal window  */
+    #mobile_window, #about_window, #feed_window{
+    	padding:50px;  
+        border:1px solid gray;
+        background: #fff;
+        color:black;
+    }
 
 
 
@@ -453,7 +561,7 @@ header {height:50px;}
 	padding: 5px 0px 0px 0px; 
 }
 #reverse_block button {min-width: 10%;}
-#field2 {min-height: 0px;}
+#field2 {min-height: 40px;}
 button.translate_button {
 	position: absolute;
     width: 90%;

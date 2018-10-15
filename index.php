@@ -25,6 +25,54 @@
 <meta name="twitter:image" content=""></meta>
 
 
+<!--feedback php-->
+<?php
+	$msg_box = ""; // в этой переменной будем хранить сообщения формы
+	
+	if($_POST['btn_submit']){
+		$errors = array(); // контейнер для ошибок
+		// проверяем корректность полей
+		if($_POST['user_name'] == "") 	 $errors[] = "Поле 'Ваше имя' не заполнено!";
+		if($_POST['user_email'] == "") 	 $errors[] = "Поле 'Ваш e-mail' не заполнено!";
+		if($_POST['text_comment'] == "") $errors[] = "Поле 'Текст сообщения' не заполнено!";
+
+		// если форма без ошибок
+		if(empty($errors)){		
+			// собираем данные из формы
+			$message  = "Имя пользователя: " . $_POST['user_name'] . "<br/>";
+			$message .= "E-mail пользователя: " . $_POST['user_email'] . "<br/>";
+			$message .= "Текст письма: " . $_POST['text_comment'];		
+			send_mail($message); // отправим письмо
+			// выведем сообщение об успехе
+			$msg_box = "<span style='color: gray;'>Сообщение успешно отправлено!</span>";
+		}else{
+			// если были ошибки, то выводим их
+			$msg_box = "";
+			foreach($errors as $one_error){
+				$msg_box .= "<span style='color: #8c0000;'>$one_error</span><br/>";
+			}
+		}
+	}
+	
+	// функция отправки письма
+	function send_mail($message){
+		// почта, на которую придет письмо
+		$mail_to = "anton16p@ya.ru"; 
+		// тема письма
+		$subject = "Письмо с обратной связи";
+		
+		// заголовок письма
+		$headers= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=utf-8\r\n"; // кодировка письма
+		$headers .= "From: Тестовое письмо <no-reply@test.com>\r\n"; // от кого письмо
+		
+		// отправляем письмо 
+		mail($mail_to, $subject, $message, $headers);
+	}
+?>
+<!--feedback php end-->
+
+
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 
@@ -157,8 +205,8 @@ function helptipx() {
 
 
 //тут был словарь 
-//var rus = [0, 'хлеб', 'село','кошка','друг', 'село']; 
-//var erz = [0, 'кше', 'веле','катка','ялга', 'велесь']; 
+//var rus = [0, 'хлеб', 'село','кошка','друг', 'село','кошка друг']; 
+//var erz = [0, 'кше', 'веле','катка','ялга', 'велесь','спанчбоб']; 
 
 var f_Lang;
 
@@ -287,6 +335,8 @@ console.log(ReplaceLastWord(str, newEndStr)); // => I like my cat
 function translate(){
 document.getElementById('field2').innerText=document.getElementById('field1').value;
 
+
+
     
 $('select#language').change(function() {
 lanRegion = $(this).val();
@@ -304,29 +354,76 @@ if(Lang==='erz') {Lang = erz};
 if(Lang==='mok') {Lang = mok};
 if(Lang.length > 1) {
  
-//далее проблема сложносоставных слов
+/* progress bar (до лучших времен)
+var progress = document.createElement("progress");
+var rightField = document.getElementById('right_field');
+progress.setAttribute('id', 'progress');
+progress.setAttribute('value', '0');
+progress.setAttribute('max', '0');
+rightField.appendChild(progress);
+// Old browser support
+if ( ! progress.value)
+    progress.value = +progress.getAttribute("value");
+if ( ! progress.max)
+    progress.max = +progress.getAttribute("max");
+*/
+//main algorithm
 
 $('#field2').html(function(x, y) { 
 
 //y=y.split(/\s* \s*/); only spaces 
+y= y.replace(/<[^>]+>/g,' ');
 y= y.match(/[A-Za-z0-9а-яА-Я]+|./g);
 var newArr; 
+
+/* определяет количество не пустых элементов массива 
+var notEmpty = 0;
+for(var i = 0; i < y.length; ++i){
+    if(y[i].match(/[A-Za-z0-9а-яА-Я]/)){
+        notEmpty++;    
+    }
+}
+*/
 
 newArr = y.reduce(function(arr, item, ci) { 
 
 	if (item.match(/[A-Za-z0-9а-яА-Я]/)){
 		
 f_Lang.reduce(function(previousValue, prev, i, cur) { 
-/*if (i==2636){
+
+
+
+
+    
+/* progress bar function (до лучших времен)
+function changeProgress() {
+    if (progress.value >= progress.max) {
+    	//alert(progress.max);
+    rightField.removeChild(progress);
+    return false;
+    }
+
+    progress.max=notEmpty*cur.length-1;
+    progress.value++;
+}
+changeProgress();
+*/
+
+
+/*
 alert('массив: '+cur 
-+'\n ар: '+typeof arr[0]
+	+'\n copyар фул: '+ y
++'\n ар фул: '+ arr
++'\n ар итем: '+arr[ci]
 +'\n итем: '+item
 +'\n посл: '+previousValue 
 +'\n прев: '+prev
++'\n и: '+i
 ); 
-}*/
+*/
 if ((''+item).toLowerCase()!==(''+prev).toLowerCase()){
-return item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]);
+	
+return [item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
 } else {
 
 if (typeof arr[ci]=='object'){
@@ -343,7 +440,7 @@ return arr;
 }, y); 
 
 
-var generateList = function(items) {
+function generateList(items) {
   return items.reduce((ul, item) => {
     var li = document.createElement('li');
     li.className = "option";
@@ -362,7 +459,7 @@ var generateList = function(items) {
 
 var fieldContent = '';
 newArr.reduce(function(mas, newItem, i) { 
-if (newArr[i][1]==undefined){
+if (newArr[i][1]==undefined || typeof(newArr[i])=='string'){
 		return fieldContent = fieldContent+ '<span>' + newItem +'</span>' ;
 	}else {	
 		return fieldContent = fieldContent+
@@ -520,15 +617,66 @@ window.history.pushState('', '', '?w='+new_url);
 
 
 //конец функции
+</script>
 
+<script>
+	$( document ).ready(function() {
+	    //get the height and width of the page
+    var window_width = $(window).width();
+    var window_height = $(window).height();
+    //vertical and horizontal centering of modal window(s)
+    /*we will use each function so if we have more then 1
+    modal window we center them all*/
+    $('.modal_window').each(function(){
+        //get the height and width of the modal
+        //var modal_height = $(this).outerHeight();
+        //var modal_width = $(this).outerWidth();
+        //calculate top and left offset needed for centering
+        //var top = (window_height-modal_height)/2;
+        //var left = (window_width-modal_width)/2;
+        //apply new top and left css values
+        //$(this).css({'top' : top , 'left' : left});
 
+    });
 
+        $('.activate_modal').click(function(){
+              //get the id of the modal window stored in the name of the activating element
+              var modal_id = $(this).attr('name');
+              //use the function to show it
+              show_modal(modal_id);
+        });
+
+        $('.close_modal').click(function(){
+            //use the function to close it
+            close_modal();
+        });
+    //THE FUNCTIONS
+
+    function close_modal(){
+        //hide the mask
+        $('#mask').fadeOut(500);
+        $('#wrapper').css({ 'overflow' : ''});
+        //hide modal window(s)
+        $('.modal_window').fadeOut(500);
+    }
+
+    function show_modal(modal_id){
+        //set display to block and opacity to 0 so we can use fadeTo
+        $('#mask').css({ 'display' : 'block', opacity : 0.5});
+        $('#wrapper').css({ 'overflow' : 'hidden'});
+        //fade in the mask to opacity 0.8
+        $('#mask').fadeTo(500,0.5);
+         //show the modal window
+        $('#'+modal_id).fadeIn(500);
+
+    }
+});
 </script>
 
 </head>
 <body>
-
-	<div id="wrapper">
+	<div id='mask' class='close_modal'></div>
+	<div id="wrapper">		
 		<!-- Header страницы -->
 		<header>
 
@@ -536,8 +684,8 @@ window.history.pushState('', '', '?w='+new_url);
 			</div>
 
 <div id="follow_block">
-	<i class="fa fa-github" aria-hidden="true"></i>
-<i class="fa fa-vk" aria-hidden="true"></i>
+	<a href="https://github.com/AntonPolyakin/ethnic.ru" target="_blank" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>
+<a href="https://vk.com/id66838282" target="_blank" title="VK"><i class="fa fa-vk" aria-hidden="true"></i></a>
 </div>
 		</header>
 		<!-- Основное содержимое страниц -->
@@ -582,7 +730,7 @@ window.history.pushState('', '', '?w='+new_url);
 									<div class="bottom_panel_block">
 
 										<div class="left_buttons_botton">
-										<button onclick="alert('функция в разработке');"><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
+										<button disabled><i class="fa fa-microphone" aria-hidden="true"></i> <span>Голосовой ввод</span></button>
 										<button onclick="if (this.lastElementChild.innerText=='Экранная клавиатура'){ this.lastElementChild.innerText = 'Скрыть экранную клавиатуру';document.getElementById('keyboard').firstElementChild.style.display='block';} 
 else {this.lastElementChild.innerText = 'Экранная клавиатура';document.getElementById('keyboard').firstElementChild.style.display='none'};" class="virtual-keyboard-hook" data-target-id="field1" data-keyboard-mapping="qwerty"><i class="fa fa-keyboard-o" aria-hidden="true"></i> <span>Экранная клавиатура</span></button></div>
 										<span id="symbol_count"></span>
@@ -598,7 +746,7 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 							</div>
 						</div>
 
-						<div id="reverse_block"><button><i class="fa fa-exchange" aria-hidden="true"></i></button></div>
+						<div id="reverse_block"><button disabled><i class="fa fa-exchange" aria-hidden="true"></i></button></div>
 
 						<div class="fields" id="second_text_field">
 							<div id="right_field">
@@ -623,7 +771,12 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 <button class="translate_button" >Перевести <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
 
 									</div>
-									<div name="text2" id="field2" contenteditable="false" ></div>
+									<div name="text2" id="field2" contenteditable="false" >
+										
+<!--<progress id="progress" value="0" max="100">      
+    </progress>-->
+
+									</div>
 									
 									<!--<textarea name="text2" id="field2" readonly></textarea>-->
 									<div class="bottom_panel">
@@ -640,7 +793,7 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 			
 
 												</button>
-												<button><i class="fa fa-pencil" aria-hidden="true"></i><span> Предложить перевод</span></button>
+												<button disabled><i class="fa fa-pencil" aria-hidden="true"></i><span> Предложить перевод</span></button>
 											</div>
 										
 									</div>
@@ -669,10 +822,34 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 					<!-- Подвал сайта -->
 					<footer>
 						<div id="bottom_menu">
-							<a href="" class="bottom_menu_links">Мобильная версия</a>
-							<a href="" class="bottom_menu_links">О переводчике "Этник"</a>
-							<a href="" class="bottom_menu_links">Отправить отзыв</a>
+							<a href="#" class="bottom_menu_links activate_modal" name="mobile_window" >Мобильная версия</a>
 
+<div id='mobile_window' class='modal_window'>Мобильная версия сайта находится в разработке</div>
+
+							<a href="#" class="bottom_menu_links activate_modal" name="about_window">О переводчике "Этник"</a>
+
+<div id='about_window' class='modal_window'><h1>Етник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><img src="unsonet_logo.png" alt="" height="16px" style="float:right;"><span style="color:gray; font-size:12px;float:right;">v. 0.0.1 (beta)</span></div>
+							<a href="#" class="bottom_menu_links activate_modal" name="feed_window">Отправить отзыв</a>
+<div id='feed_window' class='modal_window'>Будем признательны, если вы оставите отзыв, предложение или пожелание.
+<!--feed-back-->
+<br/>
+    <?= $msg_box; // вывод сообщений ?>
+    <br/>
+    <form action="<?=$_SERVER['PHP_SELF'];?>" method="post" name="frm_feedback">      
+        <input type="text" name="user_name" placeholder="Ваше имя" value="<?=($_POST['user_name']) ? $_POST['user_name'] : ""; // сохраняем то, что вводили?>" /><br/>
+              
+        <input type="text" name="user_email" placeholder="Ваш e-mail" value="<?=($_POST['user_email']) ? $_POST['user_email'] : ""; // сохраняем то, что вводили?>" /><br/>
+                 
+        <textarea class="feedfield" placeholder="Текст сообщения" name="text_comment"><?=($_POST['text_comment']) ? $_POST['text_comment'] : ""; // сохраняем то, что вводили?></textarea>
+         
+        <br/>
+        <input class="translate_button" type="submit" value="Отправить" name="btn_submit" />
+    </form>
+ <!--feed-back end-->
+
+
+
+</div>
 						</div>
 						<div class="copyright cassing"><img src="unsonet_logo.png" alt="" height='32px'></div>
 					</footer>
