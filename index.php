@@ -329,15 +329,9 @@ console.log(ReplaceLastWord(str, newEndStr)); // => I like my cat
 }
 //конец живого поиска
 
-
-
-
 function translate(){
 document.getElementById('field2').innerText=document.getElementById('field1').value;
-
-
-
-    
+ 
 $('select#language').change(function() {
 lanRegion = $(this).val();
 localStorage.removeItem("lanRegion"); // Мало ли xD 
@@ -354,61 +348,31 @@ if(Lang==='erz') {Lang = erz};
 if(Lang==='mok') {Lang = mok};
 if(Lang.length > 1) {
  
-/* progress bar (до лучших времен)
-var progress = document.createElement("progress");
-var rightField = document.getElementById('right_field');
-progress.setAttribute('id', 'progress');
-progress.setAttribute('value', '0');
-progress.setAttribute('max', '0');
-rightField.appendChild(progress);
-// Old browser support
-if ( ! progress.value)
-    progress.value = +progress.getAttribute("value");
-if ( ! progress.max)
-    progress.max = +progress.getAttribute("max");
-*/
-//main algorithm
 
+//main algorithm
 $('#field2').html(function(x, y) { 
 
 //y=y.split(/\s* \s*/); only spaces 
-y= y.replace(/<[^>]+>/g,' ');
+y= y.replace(/<[^>]+>/g,'');
 y= y.match(/[A-Za-z0-9а-яА-Я]+|./g);
+y.clean(' ');
 var newArr; 
-
-/* определяет количество не пустых элементов массива 
-var notEmpty = 0;
-for(var i = 0; i < y.length; ++i){
-    if(y[i].match(/[A-Za-z0-9а-яА-Я]/)){
-        notEmpty++;    
-    }
-}
-*/
+var itemsRange;
+var firstArr = y.slice();
 
 newArr = y.reduce(function(arr, item, ci) { 
+for (var di = ci; di < y.length; di++){
 
-	if (item.match(/[A-Za-z0-9а-яА-Я]/)){
-		
-f_Lang.reduce(function(previousValue, prev, i, cur) { 
-
-
-
-
-    
-/* progress bar function (до лучших времен)
-function changeProgress() {
-    if (progress.value >= progress.max) {
-    	//alert(progress.max);
-    rightField.removeChild(progress);
-    return false;
-    }
-
-    progress.max=notEmpty*cur.length-1;
-    progress.value++;
+if(di <= ci){
+	itemsRange = item;
+}else {
+	itemsRange = y.multiGetRange(ci, di).join(' ');
 }
-changeProgress();
-*/
 
+
+//alert(ci+' '+di);
+
+f_Lang.reduce(function(previousValue, prev, i, cur) { 
 
 /*
 alert('массив: '+cur 
@@ -419,27 +383,111 @@ alert('массив: '+cur
 +'\n посл: '+previousValue 
 +'\n прев: '+prev
 +'\n и: '+i
++'\n итемсРэндж: '+itemsRange
 ); 
 */
-if ((''+item).toLowerCase()!==(''+prev).toLowerCase()){
-	
-return [item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
-} else {
 
-if (typeof arr[ci]=='object'){
-return arr[ci].push(item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]));
-}else {
-return arr[ci] = [item.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
+if ((''+itemsRange).toLowerCase()==(''+prev).toLowerCase()){
+
+if ((di-ci)>=1){
+	
+// изменяет заданное количество элементов массива
+	var removeValFromIndex = range(ci,di); 
+    for (var r = removeValFromIndex.length -1; r >= 0; r--){
+arr.splice(removeValFromIndex[r],1,'');
 }
+
+
+return arr[di] = [itemsRange.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
+}else{
+
+	if (typeof arr[ci]=='object'){
+		return arr[ci].push(itemsRange.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i]));
+	} else {
+		return arr[ci] = [itemsRange.replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
+	}
 }
+
+} else {
+	return [itemsRange.toString().replace(new RegExp('^'+prev+'$', 'gi'), Lang[i])];
+	}
+
 }, 0); 
+
 }
 
 return arr;
+},firstArr); 
+
+
+var fieldContent = '';
+newArr.clean('');
+newArr.reduce(function(mas, newItem, i) { 
+if (newArr[i][1]==undefined || typeof(newArr[i])=='string'){
+		return fieldContent = fieldContent+ '<span>' + newItem +'</span> ' ;
+	}else {	
+		return fieldContent = fieldContent+
+'<span id="word-'+i+'" class="word-show-hint" data-hint="#word-hint-'+i+'">'+newArr[i][0]+'</span> '+'<div id="word-hint-'+i+'" class="word-hint"><ul class="selectMenuBox">'+generateList(newItem).innerHTML+'</ul></div>';
+	}
 
 }, y); 
 
+return fieldContent;
 
+}); 
+}; 
+}; 
+};
+
+// вывод истории переводов
+function addHistory(words, translation, l1t, l2t){	    
+if ($('#parent_history_div .pay_block').length > 4) {
+    		$('#parent_history_div .pay_block:last').remove();
+    	}
+		       var clonedDiv=$('#parent_history_div').prepend('<div class="pay_block"><span class="history_text"><span class ="history_lang">'+l1t+' язык: </span>'+words+'<br><span class ="history_lang">'+l2t+' язык: </span>'+translation+'</span><button class="delete_pay_block" onclick="$(this).parent().remove();"><i class="fa fa-times" aria-hidden="true"></i></button>' +'</div>').prependTo('#parent_history_div');
+		 }
+// создание числового диапазона в виде массива
+function range(start, count) {
+    if(arguments.length == 1) {
+        count = start;
+        start = 0;
+    }
+
+    var foo = [];
+    for (var i = 0; i < count; i++) {
+        foo.push(start + i);
+    }
+    return foo;
+}
+
+// вывод диапазона элементов массива
+Array.prototype.multiGetRange = function(lowEnd,highEnd){
+    var numArr = [ ],
+    c = highEnd - lowEnd + 1;
+    while ( c-- ) {
+        numArr[c] = highEnd--;
+    }
+    var args = Array.apply(null, numArr);
+    var result = [];
+      
+    for(var i = 0; i < numArr.length; i++){
+        result.push(this[args[i]]);
+    }         
+    return result;
+};
+// удаление элементов содержащих определенное значение
+Array.prototype.clean = function(deleteValue) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == deleteValue) {         
+      this.splice(i, 1);
+      i--;
+    }
+  }
+  return this;
+};
+
+
+// создание списка из массива
 function generateList(items) {
   return items.reduce((ul, item) => {
     var li = document.createElement('li');
@@ -456,29 +504,7 @@ function generateList(items) {
   }, document.createElement('ul'));
 }
 
-
-var fieldContent = '';
-newArr.reduce(function(mas, newItem, i) { 
-if (newArr[i][1]==undefined || typeof(newArr[i])=='string'){
-		return fieldContent = fieldContent+ '<span>' + newItem +'</span>' ;
-	}else {	
-		return fieldContent = fieldContent+
-'<span id="word-'+i+'" class="word-show-hint" data-hint="#word-hint-'+i+'">'+newArr[i][0]+'</span>'+'<div id="word-hint-'+i+'" class="word-hint"><ul class="selectMenuBox">'+generateList(newItem).innerHTML+'</ul></div>';
-	}
-
-}, y); 
-
-return fieldContent;
-
-}); 
-}; 
-}; 
-};
-
-
-
  //разделение текста
-
 function showLines() {
     var lines = getLines();
     console.log(
@@ -491,9 +517,9 @@ function showLines() {
 
 function splitLines() {
     var p = document.querySelectorAll("#field2")[0];
-    p.innerHTML = p.innerText.split(/\. /g).map(function (word) {
+    p.innerHTML = p.innerHTML.split(/\<span\>[\.]\<\/span\>/g).map(function (word) {
         return '<span class="parag">' + capitalizeFirstLetter(word) + '</span>'
-    }).join('. ');
+    }).join('<span>.</span> ');
 
 }
 
@@ -537,7 +563,7 @@ $('document').ready(function govno(){
     
 
         translate();
-
+splitLines();
 
 //tooltip and select box
 $(function () {
@@ -569,8 +595,10 @@ $('ul.selectMenuBox > li.option').click(function() {
 	  }          
 	});
 
-//end tooltip and select box        
-//splitLines();
+//end tooltip and select box  
+
+addHistory(document.getElementById('field1').value,document.getElementById('field2').innerText,$("#selector_language option:selected").text(),$("#language option:selected").text());
+
 //    showLines();
         e.preventDefault();
         // Получаем адрес страницы
@@ -773,12 +801,8 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 									</div>
 									<div name="text2" id="field2" contenteditable="false" >
 										
-<!--<progress id="progress" value="0" max="100">      
-    </progress>-->
-
 									</div>
-									
-									<!--<textarea name="text2" id="field2" readonly></textarea>-->
+															
 									<div class="bottom_panel">
 											<div class="right_buttons_botton">
 												<button class="helptip" onclick="helptip(this)"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>Поделиться</span>
@@ -802,8 +826,11 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 							<div id="dictionary_block">
 								<div class="dictionary" id="words_block_first">
 									<div id="words_content_left">
-										<h4>Похожие слова</h4>
-									Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur rerum sunt saepe, molestiae soluta similique maiores illum rem ut vitae, error. Veritatis eos, similique animi neque unde repellat error sapiente!</div>
+										<h4>История переводов</h4>
+									<div id='parent_history_div'>   
+ 
+</div>
+								</div>
 								</div>
 								<div class="dictionary" id="words_block_second">
 									<div id="words_content_right">
@@ -828,7 +855,7 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 
 							<a href="#" class="bottom_menu_links activate_modal" name="about_window">О переводчике "Этник"</a>
 
-<div id='about_window' class='modal_window'><h1>Етник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><img src="unsonet_logo.png" alt="" height="16px" style="float:right;"><span style="color:gray; font-size:12px;float:right;">v. 0.0.1 (beta)</span></div>
+<div id='about_window' class='modal_window'><h1>Этник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><img src="unsonet_logo.png" alt="" height="16px" style="float:right;"><span style="color:gray; font-size:12px;float:right;">v. 0.0.1 (beta)</span></div>
 							<a href="#" class="bottom_menu_links activate_modal" name="feed_window">Отправить отзыв</a>
 <div id='feed_window' class='modal_window'>Будем признательны, если вы оставите отзыв, предложение или пожелание.
 <!--feed-back-->
