@@ -3,13 +3,13 @@
 <head>
 <title>Этник - Переводчик</title>
 
-	<link rel="icon" href=​"favicon.png" type="image/png">
+	<link rel="icon"  href="/favicon.png" type="image/png">
 	<link rel="stylesheet" type="text/css" href="style.css?ver=<?php echo date(dmYHis);?>" >
 <link rel="stylesheet" href="virtual-keyboard.css?ver=<?php echo date(dmYHis);?>">
 
 	<meta charset="UTF-8">
-	<meta name="keywords" content="переводчик, словарь, перевод текста">
-	<meta name="description" content="Онлайн переводчик текста">
+	<meta name="keywords" content="переводчик, словарь, перевод текста, эрзянский, онлайн перевод">
+	<meta name="description" content="Этник Переводчик - бесплатный онлайн переводчик текста с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.">
 
 
 <meta property="og:url" content="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
@@ -24,6 +24,7 @@
 <meta name="twitter:description" content=""></meta> 
 <meta name="twitter:image" content=""></meta>
 
+<meta name="yandex-tableau-widget" content="logo=http://ethnic.ml/logo.png, color=#a33" />
 
 <!--feedback php-->
 <?php
@@ -74,7 +75,7 @@
 
 
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 	<script src="virtual-keyboard.js"></script>
 	<!--rubber_field-->
@@ -883,4 +884,4 @@ else {this.lastElementChild.innerText = 'Экранная клавиатура';
 				</div>
 
 			</body>
-			</html
+			</html>
