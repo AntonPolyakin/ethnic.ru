@@ -43,7 +43,18 @@ function down(obj) {
     t5.style.display = "none";
     document.getElementById('autocomplete_words').style.visibility = "visible";
 
-    if (lastWord(obj.value.length) > 0)
+
+function lastWord(o) {
+    return ("" + o).replace(/[\s-]+$/, '').split(/[\s-]/).pop();
+};
+/*
+lastWord('This is a test.'); // => 'test.'
+lastWord('Here is something to-do.'); // => 'do.'
+*/
+
+
+
+    if (lastWord(obj.value.length) > 0){
         for (var i = 0; i < f_Lang.length; i++) {
             //какого хера тут треугольные числа
             if (reg.test(f_Lang[i])) {
@@ -66,8 +77,8 @@ function down(obj) {
             };
 
 
-        };
-
+        }
+}
     $(function() {
         var original = [];
         $('.words_hints').each(function() {
@@ -82,13 +93,6 @@ function down(obj) {
 
 };
 
-var lastWord = function(o) {
-    return ("" + o).replace(/[\s-]+$/, '').split(/[\s-]/).pop();
-};
-/*
-lastWord('This is a test.'); // => 'test.'
-lastWord('Here is something to-do.'); // => 'do.'
-*/
 
 function ReplaceLastWord(str, newStr) {
     return str.replace(/\s\S+$/, newStr);

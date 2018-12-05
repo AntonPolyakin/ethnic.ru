@@ -949,13 +949,13 @@ ul.selectMenuBox > li.option:hover {
 }
 
 /* Portrait tablets and medium desktops */
-@media (max-width: 1199px) {
+@media only screen and (max-width: 1199px) {
 .cassing button:not(.translate_button) span{display:none;}
 .cassing button:not(.translate_button) i{margin:0;}
 }
 
 /* Portrait tablets and small desktops */
-@media (max-width: 991px) {
+@media only screen and (max-width: 991px) {
 #wrapper {grid-template-columns: 1fr;}
 aside {display:none;}
 #selector_language,
@@ -983,7 +983,7 @@ footer{
 }
 
 /* Landscape phones and portrait tablets */
-@media (max-width: 767px) {
+@media only screen and (max-width: 767px) {
 #text_fields{
     grid-template-columns: 1fr;
     padding: 10px;
@@ -999,7 +999,7 @@ footer{
  
 }
 
-@media (max-width: 639px) {
+@media only screen and (max-width: 639px) {
 .top_panel_right{
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
@@ -1017,6 +1017,6 @@ footer{
 }
 
 /* Landscape phones and smaller */
-@media (max-width: 480px) {
+@media only screen and (max-width: 480px) {
 
 }

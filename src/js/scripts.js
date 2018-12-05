@@ -1,6 +1,6 @@
 /*swap language*/
 $(document).ready(function() {
-$('.reverse_block button, .select__reverse button').on('click', function() {
+$('#reverse_block button, .select__reverse button').on('click', function() {
 
 var val1 = $('#selector_language option:selected');
 var val2 = $('#language option:selected');
