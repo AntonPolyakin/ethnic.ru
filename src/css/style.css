@@ -635,6 +635,7 @@ header,
 }
 
 #dictionary_words div {
+    display: none;
     visibility: hidden;
 }
 
@@ -956,7 +957,11 @@ ul.selectMenuBox > li.option:hover {
 
 /* Portrait tablets and small desktops */
 @media only screen and (max-width: 991px) {
-#wrapper {grid-template-columns: 1fr;}
+#wrapper {
+    grid-template-columns: 1fr;
+}
+main {grid-column-start: 1;
+    grid-column-end: 1;}
 aside {display:none;}
 #selector_language,
 #language {
@@ -983,7 +988,7 @@ footer{
 }
 
 /* Landscape phones and portrait tablets */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 767px){
 #text_fields{
     grid-template-columns: 1fr;
     padding: 10px;

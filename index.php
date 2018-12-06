@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="src/css/virtual-keyboard.css?ver=<?php echo date(dmYHis);?>">
 
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="keywords" content="переводчик, словарь, перевод текста, эрзянский, онлайн перевод">
   <meta name="description" content="Этник Переводчик - бесплатный онлайн переводчик текста с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки.">
 
