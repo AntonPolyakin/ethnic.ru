@@ -1,37 +1,44 @@
+
+/*preloader*/
+window.addEventListener("load", function() {
+    var myApp = (function() {
+
+      let dummyFunction = function() {
+        let preloader = document.all['js-preloader'];
+        preloader.classList.toggle('preloader-fadeout', true);
+        setTimeout(function() {
+          preloader.remove();
+      }, 1000);
+
+    };
+
+    return {
+        dummyFunction: dummyFunction
+    };
+
+})();
+
+
+myApp.dummyFunction();
+});
+/*end preloader*/
+
 /*swap language*/
 $(document).ready(function() {
-$('#reverse_block button, .select__reverse button').on('click', function() {
+    $('#reverse_block button, .select__reverse button').on('click', function() {
 
-var val1 = $('#selector_language option:selected');
-var val2 = $('#language option:selected');
+        var val1 = $('#selector_language option:selected');
+        var val2 = $('#language option:selected');
 
- 
-$('#selector_language option:eq(' + val2.index() + ')').prop('selected', true);
-$('#language option:eq(' + val1.index() + ')').prop('selected', true);
-$('#selector_language, #language').trigger('click');
-$('#selector_language, #language').trigger('change');
-});
+
+        $('#selector_language option:eq(' + val2.index() + ')').prop('selected', true);
+        $('#language option:eq(' + val1.index() + ')').prop('selected', true);
+        $('#selector_language, #language').trigger('click');
+        $('#selector_language, #language').trigger('change');
+    });
 });
 /*end swap language*/
 
-/*hide copy language*/
-$(document).ready(function() {
-$("#selector_language, #language").each(function(cSelect) {
-    $(this).data('stored-value', $(this).val());
-  });
-
-  $("#selector_language, #language").change(function() {
-    var cSelected = $(this).val();
-    var cPrevious = $(this).data('stored-value');
-    $(this).data('stored-value', cSelected);
-
-    var otherSelects = $("#selector_language, #language").not(this);
-
-    otherSelects.find('option[value=' + cPrevious + ']').removeAttr('disabled');
-    otherSelects.find('option[value=' + cSelected + ']').attr('disabled', 'disabled');
-  });
- });
-/*end hide copy language*/
 
 /*textarea autosize*/
 function autosize() {
@@ -55,6 +62,7 @@ function autosize() {
 
 /* focus on textarea*/
 window.addEventListener("load", function() {
+
     document.getElementById('first_text_field').onclick = function(event) {
         if (event.target.tagName !== 'SELECT') {
             document.getElementById('field1').focus();
@@ -64,55 +72,87 @@ window.addEventListener("load", function() {
 /* end focus on textarea*/
 
 /* language menu */
-$(document).ready(function() {
+$(window).on("load", function() {
 
     $(function() {
         $("#selector_language, #language").load("../../languages.html");
     });
 
+
+
+
+    /*end hide copy language*/
     // change text in aside buttons
     function getSelectedToButtons() {
-        $('.select__first-lang button').text($('#selector_language option:selected:not([disabled])').text());
-        $('.select__second-lang button').text($('#language option:selected:not([disabled])').text());
+        $('.select__first-lang button').html($('#selector_language option:selected').text());
+        $('.select__second-lang button').html($('#language option:selected').text());
         f_Lang_check();
     }
 
-    $('#selector_language, #language').change(function() {
-        getSelectedToButtons();
-    });
+//hide copy language
+
+$("#text_fields select").each(function(cSelect) {
+    $(this).data('stored-value', $(this).val());
+});
+
+
+function disableCopyItems(selector) {
+    var cSelected = $(selector).val();
+    var cPrevious = $(selector).data('stored-value');
+    $(selector).data('stored-value', cSelected);
+
+    var otherSelects = $("#text_fields select").not(selector);
+
+    otherSelects.find('option[value=' + cPrevious + ']').removeAttr('disabled');
+    otherSelects.find('option[value=' + cSelected + ']').attr('disabled', 'disabled');
+    getSelectedToButtons();
+}
+
+$('#text_fields select').change(function(e){disableCopyItems(e.target)});
+
+
     //buttom's events
-    $('.select__first-lang button').click(function(e) {
-        $('#selector_language').trigger('click');
-        $('#selector_language').trigger('change');
+    $('.select_buttons button').click(function(e) {
+        var selectBlock, selectBlockJS;
+        if($(e.target).parent().index() == 0){
+            selectBlock = $('#selector_language');
+            selectBlockJS = document.getElementById('selector_language');
+        }else if ($(e.target).parent().index() == 2){
+            selectBlock = $('#language');
+            selectBlockJS = document.getElementById('language');
+        }
+
+        disableCopyItems(selectBlockJS);
+        selectBlock.trigger('click');
         $(e.target).addClass('active');
-        $('.select__second-lang button').removeClass('active');
+        $(e.target).parent().siblings('.select_buttons').find('button').removeClass('active');
+        getSelectedToButtons();
+
     });
 
-    $('.select__second-lang button').click(function(e) {
-        $('#language').trigger('click');
-        $('#language').trigger('change');
-        $(e.target).addClass('active');
-        $('.select__first-lang button').removeClass('active');
+// getmenu
+function getSelectItems(thisSelect){
+    $('.select-lang-menu').html('<ul class="lang-list"></ul>');
+    $(thisSelect + ' option').each(function() {
+        if (!$(this).attr('disabled')) {
+            $('ul.lang-list').append('<li><a href="#" data-value="' + $(this).val() + '">' + $(this).text() + '</a></li>');
+        } else {
+            $('ul.lang-list').append('<li><span data-value="' + $(this).val() + '">' + $(this).text() + '</span></li>');
+        }
     });
+}
 
     //Select into ul list
     var container = document;
     container.addEventListener("click", function(event) {
         if (event.target.tagName === 'SELECT' && event.target.id === 'selector_language' || event.target.id === 'language') {
 
+
             var thisSelect = 'select#' + event.target.id;
 
-            $('.select-lang-menu').html('<ul class="lang-list"></ul>');
-            $(thisSelect + ' option').each(function() {
-if(!$(this).attr('disabled')){
-                $('ul.lang-list').append('<li><a href="#" data-value="' + $(this).val() + '">' + $(this).text() + '</a></li>');
-            }else{
-$('ul.lang-list').append('<li><span data-value="' + $(this).val() + '">' + $(this).text() + '</span></li>');
-            }
-            });
-
+            getSelectItems(thisSelect);
             //set first item as active on ready and update list when dropdown selected
-            var e = $('option:selected:not([disabled])', event.target).index();
+            var e = $('option:selected', event.target).index();
             $('ul.lang-list li:eq(' + e + ')').addClass('active');
 
             // set active to selction and sync
@@ -120,18 +160,22 @@ $('ul.lang-list').append('<li><span data-value="' + $(this).val() + '">' + $(thi
             // update dropdown when links selected
             $('ul.lang-list > li > a').click(function() {
 
-                
+
                 var e = $(this).parent().index();
 
                 if (!$(thisSelect + ' option:eq(' + e + ')').attr('disabled')) {
-$('ul.lang-list > li').removeClass('active');
-                $(this).parent().addClass('active');
+                    $('ul.lang-list > li').removeClass('active');
+                    $(this).parent().addClass('active');
 
-                $(thisSelect + ' option:eq(' + e + ')').prop('selected', true);
-                getSelectedToButtons();
-            }else{
-                alert('Словарь отсутствует');
-            }
+                    $(thisSelect + ' option:eq(' + e + ')').prop('selected', true);
+
+
+                    $(thisSelect).trigger('click');
+                    $(thisSelect).trigger('change');
+                    getSelectedToButtons();
+                }else{
+                    alert('Словарь отсутствует');
+                }
             });
         }
     });
@@ -173,9 +217,9 @@ function counter(el) {
 /* copy */
 function selectText(elementId) {
     var doc = document,
-        text = doc.getElementById(elementId),
-        range,
-        selection;
+    text = doc.getElementById(elementId),
+    range,
+    selection;
     if (doc.body.createTextRange) {
         range = document.body.createTextRange();
         range.moveToElementText(text);
@@ -208,10 +252,10 @@ function copy() {
         }
         t.innerHTML = ''
     }
-*/
-/*end copy */
+    */
+    /*end copy */
 
-/* tooltip */
+    /* tooltip */
 // Основная функция, передаем в нее обрабатываемый тег
 // или this (для текущего тега)
 function helptip(t) {
@@ -294,23 +338,36 @@ $(document).ready(function() {
         $('#wrapper').css({
             'overflow': ''
         });
+
         //hide modal window(s)
         $('.modal_window').fadeOut(500);
+        $('.modal_header').remove().fadeOut(500);
+
     }
 
     function show_modal(modal_id) {
+
         //set display to block and opacity to 0 so we can use fadeTo
         $('#mask').css({
             'display': 'block',
             opacity: 0.5
         });
+
         $('#wrapper').css({
             'overflow': 'hidden'
         });
+
+        $('.modal_window').prepend('<div class="modal_header"><i class="fa fa-times close_modal" aria-hidden="true"></i></div>');
         //fade in the mask to opacity 0.8
         $('#mask').fadeTo(500, 0.5);
         //show the modal window
         $('#' + modal_id).fadeIn(500);
+
+        $('i.close_modal').click(function() {
+        //use the function to close it
+        close_modal();
+    });
+
 
     }
 });

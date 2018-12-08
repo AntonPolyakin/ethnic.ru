@@ -112,6 +112,7 @@ button[disabled] {
 
 /*button*/
 .translate_button {
+    float:right;
     font-weight: bold;
     width: 170px;
     -webkit-transition: box-shadow .5s;
@@ -469,7 +470,7 @@ input#aside-search-input {
 .select-lang-menu ul.lang-list li a:hover {
     background: #f4f4f4;
 }
-.select-lang-menu ul.lang-list li.active a {
+.select-lang-menu ul.lang-list li.active a, .select-lang-menu ul.lang-list li.active span{
     font-weight: bold;
 }
 
@@ -547,6 +548,7 @@ header,
 .fields textarea:focus {
     outline: none;
 }
+
 .top_panel_left,
 .bottom_panel,
 .top_panel_right {
@@ -580,9 +582,10 @@ header,
     box-shadow: 0 5px 26px 0 rgba(0,0,0,.32);
 }
 
+
 #selector_language,
 #language {
-    display: none;
+  display:none;
 }
 
 #symbol_count {
@@ -597,6 +600,7 @@ header,
 .right_buttons,
 .right_buttons_botton,
 .lang_select_first {
+    text-align: right;
     float: right;
 }
 .left_buttons,
@@ -918,6 +922,11 @@ ul.selectMenuBox > li.option:hover {
 }
 
 .modal_window {
+    text-align: left;
+    padding: 30px;
+    color: black;
+    border: 1px solid gray;
+    background: #fff;
     position: absolute; /* important so we can position it on center later */
     z-index: 2;
     top: 0;
@@ -927,21 +936,91 @@ ul.selectMenuBox > li.option:hover {
     display: none; /* don't show it */
     box-sizing: border-box;
     max-width: 50%;
+    min-height: 50%;
     height: max-content;
     margin: auto;
     /* styling bellow */
-    color: white;
+    
+}
+.modal_header{ 
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+    top:0;
+    right: 0;
 }
 
-/* style a specific modal window  */
-#mobile_window,
-#about_window,
-#feed_window {
-    padding: 50px;
-    color: black;
-    border: 1px solid gray;
-    background: #fff;
+
+i.close_modal {
+    opacity: 0.5;
+    display: inline-block;
+    font-size: 20px;
+    z-index: 3;
+  padding: 10px;
+    box-sizing: border-box;
 }
+i.close_modal:hover{opacity: 1;}
+
+
+/* style a specific modal window  */
+#mobile_window{
+    background: url(../img/presentation.png) no-repeat;
+    background-size: 100%;
+}
+
+
+/*preloader*/
+.preloader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #bababa;
+  z-index: 9999;
+}
+
+.spin {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  border-width: 5px;
+  border-color: white;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left: 5px solid transparent;
+  border-radius: 100%;
+  animation: rotate .5s linear infinite;
+}
+
+.preloader-fadeout {
+  animation: fadeOut .5s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+
+
+
+
 
 
 /* Large desktops and laptops */
@@ -957,6 +1036,7 @@ ul.selectMenuBox > li.option:hover {
 
 /* Portrait tablets and small desktops */
 @media only screen and (max-width: 991px) {
+
 #wrapper {
     grid-template-columns: 1fr;
 }
@@ -967,8 +1047,20 @@ aside {display:none;}
 #language {
     display: inline-block;
 }
-.translate_button{width: auto;}
-.translate_button i{margin-left: 10px;}
+
+.top_panel_left{
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-gap: 10px;
+}
+
+.translate_button{
+    width:100%;
+    grid-column: 1 / 3;
+}
+
+.translate_button i{margin-left: auto;}
 
 footer{
     grid-template-columns: 1fr;
@@ -989,6 +1081,9 @@ footer{
 
 /* Landscape phones and portrait tablets */
 @media only screen and (max-width: 767px){
+
+
+
 #text_fields{
     grid-template-columns: 1fr;
     padding: 10px;
@@ -1002,21 +1097,16 @@ footer{
     display: block;
 }
  
+.modal_window {
+    bottom:auto;
+    top:0;
+    min-width:100%;
+    height: auto;
+}
+
 }
 
 @media only screen and (max-width: 639px) {
-.top_panel_right{
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    display: grid;
-    grid-gap: 10px;
-}
-.translate_button i{margin-left: auto;}
-
-.translate_button{
-    width:100%;
-    grid-column: 1 / 3;
-}
 
 .right_buttons{margin-left: auto;}
 }

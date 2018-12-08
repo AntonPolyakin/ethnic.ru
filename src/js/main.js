@@ -10,10 +10,10 @@ function f_Lang_check() {
     //if(f_Lang==='find') {f_Lang = rus};
     if (f_Lang === 'rus') {
         f_Lang = rus;
-    };
+    }
     if (f_Lang === 'myv') {
         f_Lang = myv;
-    };
+    }
     return f_Lang;
 }
 
@@ -43,18 +43,15 @@ function down(obj) {
     t5.style.display = "none";
     document.getElementById('autocomplete_words').style.visibility = "visible";
 
+    function lastWord(o) {
+        return ("" + o).replace(/[\s-]+$/, '').split(/[\s-]/).pop();
+    }
+    /*
+    lastWord('This is a test.'); // => 'test.'
+    lastWord('Here is something to-do.'); // => 'do.'
+    */
 
-function lastWord(o) {
-    return ("" + o).replace(/[\s-]+$/, '').split(/[\s-]/).pop();
-};
-/*
-lastWord('This is a test.'); // => 'test.'
-lastWord('Here is something to-do.'); // => 'do.'
-*/
-
-
-
-    if (lastWord(obj.value.length) > 0){
+    if (lastWord(obj.value.length) > 0) {
         for (var i = 0; i < f_Lang.length; i++) {
             //какого хера тут треугольные числа
             if (reg.test(f_Lang[i])) {
@@ -74,11 +71,11 @@ lastWord('Here is something to-do.'); // => 'do.'
             } else if (reg.test(f_Lang[i + 10])) {
                 t5.innerHTML = f_Lang[i + 10];
                 t5.style.display = "block";
-            };
+            }
 
 
         }
-}
+    }
     $(function() {
         var original = [];
         $('.words_hints').each(function() {
@@ -91,24 +88,24 @@ lastWord('Here is something to-do.'); // => 'do.'
         });
     });
 
-};
-
-
-function ReplaceLastWord(str, newStr) {
-    return str.replace(/\s\S+$/, newStr);
 }
+
 /*
 var str = 'I like my dog'; 
 var newEndStr = 'cat'; 
 console.log(ReplaceLastWord(str, newEndStr)); // => I like my cat
 */
+function ReplaceLastWord(str, newStr) {
+    return str.replace(/\s\S+$/, newStr);
+}
+
 function setFocus() {      
     document.getElementById("field1").focus(); 
 }
 var words_counter;
 
 function calc_words() {
-    val = $.trim($("#field1").val()).split(/\s+/g);
+    var val = $.trim($("#field1").val()).split(/\s+/g);
     words_counter = $.grep(val, function(str) {
         return $.trim(str).length > 0;
     }).length;
@@ -116,44 +113,38 @@ function calc_words() {
 }
 
 function word_paste(ids) {
+    var a;
     if (words_counter > 1) {
-
-        var a = document.getElementById('field1').value = ReplaceLastWord(document.getElementById('field1').value, ' ' + ids.innerHTML);
+        a = document.getElementById('field1').value = ReplaceLastWord(document.getElementById('field1').value, ' ' + ids.innerHTML);
         document.getElementById('autocomplete_words').style.visibility = "hidden";
         setFocus();
     } else {
-        var a = document.getElementById('field1').value = ids.innerHTML;
+        a = document.getElementById('field1').value = ids.innerHTML;
         document.getElementById('autocomplete_words').style.visibility = "hidden";
         setFocus();
-    };
+    }
 }
 //конец живого поиска
 
 function translate() {
     document.getElementById('field2').innerText = document.getElementById('field1').value;
 
-    $('select#language').change(function() {
-        lanRegion = $(this).val();
-        localStorage.removeItem("lanRegion");
-        localStorage.setItem('lanRegion', '' + lanRegion + '');
-    });
+    // $('select#language').change(function() {
+    //     var lanRegion = $(this).val();
+    //     localStorage.removeItem("lanRegion");
+    //     localStorage.setItem('lanRegion', '' + lanRegion + '');
+    // });
 
-    var Lang = localStorage.getItem("lanRegion");
-    $('#language option[value="' + Lang + '"]').attr('selected', 'selected');
-
-
-
-    if (localStorage["lanRegion"] == undefined) {} else {
+    var Lang = $('#language').val();
+    
         if (Lang === 'rus') {
             Lang = rus;
-        };
+        }
         if (Lang === 'myv') {
             Lang = myv;
-        };
+        }
 
         if (Lang.length > 1) {
-
-
             ///////////////////////////////////////////////////////////main algorithm
             $('#field2').html(function(x, y) {
                 //y=y.split(/\s* \s*/); only spaces 
@@ -221,7 +212,7 @@ function translate() {
                 var fieldContent = '';
                 newArr.clean('');
                 newArr.reduce(function(mas, newItem, i) {
-                    if (newArr[i][1] == undefined || typeof(newArr[i]) == 'string') {
+                    if (newArr[i][1] === undefined || typeof(newArr[i]) == 'string') {
                         return fieldContent = fieldContent + '<span>' + newItem + '</span> ';
                     } else {
                         return fieldContent = fieldContent +
@@ -233,9 +224,11 @@ function translate() {
                 return fieldContent;
 
             });
-        };
-    };
-};
+///////////////////////////////////////////////////////////end main algorithm
+
+        }
+    
+}
 
 
 //проверка наличия блоков и истории
@@ -244,7 +237,7 @@ function checkTitle() {
     if ($('.history_container .history_block').length <= 0) {
         blockHide.css("display", "none");
     } else {
-        blockHide.css("display", "block");;
+        blockHide.css("display", "block");
     }
 }
 // вывод истории переводов
@@ -252,7 +245,7 @@ function addHistory(words, translation, l1t, l2t) {
     if ($('.history_container .history_block').length > 4) {
         $('.history_container .history_block:last').remove();
     }
-    var clonedDiv = $('.history_container').prepend('<div class="history_block"><span class="history_text"><span class ="history_lang">' + l1t + ': </span>' + words + '<br><span class ="history_lang">' + l2t + ': </span>' + translation + '</span><button class="delete_history_block" onclick="$(this).parent().remove();checkTitle();"><i class="fa fa-times" aria-hidden="true"></i></button>' + '</div>').prependTo('.history_container');
+    $('.history_container').prepend('<div class="history_block"><span class="history_text"><span class ="history_lang">' + l1t + ': </span>' + words + '<br><span class ="history_lang">' + l2t + ': </span>' + translation + '</span><button class="delete_history_block" onclick="$(this).parent().remove();checkTitle();"><i class="fa fa-times" aria-hidden="true"></i></button>' + '</div>').prependTo('.history_container');
     checkTitle();
 }
 
@@ -321,7 +314,7 @@ function showLines() {
         lines.map(function(line) {
             return line.map(function(span) {
                 return span.innerText;
-            }).join('')
+            }).join('');
         }));
 }
 
@@ -364,7 +357,7 @@ $('document').ready(function govno() {
 
     $('.translate_button').on('click', function(e) {
         // отменяем стандартное действие при клике
-
+f_Lang_check();
         translate();
         splitLines();
 
@@ -392,7 +385,7 @@ $('document').ready(function govno() {
             });
 
             document.onclick = function(e) {
-                if ($(e.target).hasClass('word-hint') == false)
+                if ($(e.target).hasClass('word-hint') === false)
                     $('.word-hint').hide('fast');
                 return;
             }
@@ -443,5 +436,5 @@ function getContent(url, addEntry) {
 
     });
 
-};
+}
 /* конец функции загрузки контента */

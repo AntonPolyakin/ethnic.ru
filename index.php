@@ -44,6 +44,12 @@
 
 </head>
 <body>
+
+<div class="preloader" id="js-preloader">
+  <div class="spin"></div>
+</div>
+
+  
 	<div id="wrapper">		
 		<!-- Header страницы -->
 		<header>
@@ -58,13 +64,13 @@
     <aside>
 
       <div class="aside-select">
-        <div class="select__first-lang">
+        <div class="select__first-lang select_buttons">
           <button class="select-button">Исходный язык</button>
         </div>
         <div class="select__reverse"><button><i class="fa fa-exchange" aria-hidden="true" style="
         transform: rotate(90deg);
         "></i></button></div>
-        <div class="select__second-lang">
+        <div class="select__second-lang select_buttons">
           <button class="select-button">Язык перевода</button>
         </div>
       </div>
@@ -87,16 +93,7 @@
        <div id="left_field" tabindex="0">
         <div class="top_panel_left">
 
-         <span class="lang_select_first">
-          <select id="selector_language">
-           <!--<языки>-->
-           
-           <!--<языки>-->
-         </select>
-
-       </span>
-
-       <div class="left_buttons">
+<div class="left_buttons">
         <button onclick="document.getElementById('field1').value='';"><i class="fa fa-times" aria-hidden="true"></i>
          <span>Очистить</span></button>
          <button onclick="if('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance(document.getElementById('field1').value))"><i class="fa fa-volume-up" aria-hidden="true"></i>
@@ -104,6 +101,17 @@
 
         </div>
 
+         <span class="lang_select_first">
+          <select id="selector_language">
+           <!--<языки>-->
+           
+           <!--<языки>-->
+         </select>
+       </span>
+
+       
+
+<button class="translate_button" ><span>Перевести</span><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
       </div>
       <textarea name="text" id="field1" oninput="down(this)" onfocus="document.getElementById('left_field').style.outline='thick solid #FFB0B0'" onblur="document.getElementById('left_field').style.outline='none'" maxlength="1000" onkeypress="autosize();counter(this);" onKeyUp="counter(this);calc_words();" onchange="counter(this);" virtual-keyboard ></textarea>
 
@@ -154,8 +162,7 @@
 
    </div>
 
-   <button class="translate_button" ><span>Перевести</span><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
-
+  
  </div>
  <div name="text2" id="field2" contenteditable="false" data-text="Перевод">
 
@@ -226,13 +233,13 @@
     <li><a href="#" class="bottom_menu_links activate_modal" name="mobile_window" >Мобильная версия</a></li>
     <li><a href="#" class="bottom_menu_links activate_modal" name="about_window">О сервисе</a></li>
     <li><a href="#" class="bottom_menu_links activate_modal" name="feed_window">Отправить отзыв</a></li>
-    <li><a href="#" class="" name="">Пользовательское соглашение</a></li>
-    <li><a href="#" class="" name="">Помощь</a></li>
+    <li><a href="#" class="bottom_menu_links activate_modal" name="terms_window">Пользовательское соглашение</a></li>
+    <li><a href="#" class="bottom_menu_links activate_modal" name="help_window">Помощь</a></li>
   </ul> 
     <!-- /links -->
     <!-- windows -->
-    <div id='mobile_window' class='modal_window'>Мобильная версия сайта находится в разработке</div>					
-    <div id='about_window' class='modal_window'><h1>Этник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><span style="color:gray; font-size:12px;float:right;">v. 0.1.0 (beta)</span></div>						
+    <div id='mobile_window' class='modal_window'><span>Мобильная версия сайта находится в разработке</span></div>					
+    <div id='about_window' class='modal_window'><h1 style="text-align: center;">Этник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><span style="color:gray; font-size:12px;float:right;">Версия приложения: 0.1.3 (beta)</span></div>						
     <div id='feed_window' class='modal_window'>Будем признательны, если вы оставите отзыв, предложение или пожелание.
       <!--feed-back-->
       <!--feedback php-->
@@ -301,6 +308,80 @@
 
 
     </div>
+
+<div id='terms_window' class='modal_window'>
+  
+<h1>Условия использования сервиса Этник - Переводчик</h1>
+
+<div class="body conbody" style="color: rgb(0, 0, 0); font-size: 15px;">
+<h2>1. Общие положения</h2>
+
+<p>1.1. &laquo;Unsonet&raquo;&nbsp;предлагает пользователю сети Интернет (далее &ndash; Пользователь) &mdash; использовать сервис Этник -Переводчик, доступный по адресу:&nbsp;http://ethnic.ml/ (далее &ndash; &laquo;Сервис&raquo;).</p>
+
+<p>1.2. Начиная использовать Сервис/его отдельные функции, Пользователь считается принявшим настоящие Условия в полном объеме, без всяких оговорок и исключений. В случае несогласия Пользователя с какими-либо из положений указанных документов, Пользователь не вправе использовать Сервис.</p>
+
+<p>1.3. Настоящие Условия могут быть изменены <span style="color:rgb(0, 0, 0); font-size:15px">Unsonet</span> без какого-либо специального уведомления, новая редакция Условий вступает в силу с момента ее размещения в сети Интернет по указанному в настоящем абзаце адресу, если иное не предусмотрено новой редакцией Условий.&nbsp;</p>
+
+<p>1.4. В случае если <span style="color:rgb(0, 0, 0); font-size:15px">Unsonet</span> были внесены какие-либо изменения в настоящие Условия, в порядке, предусмотренном п. 1.3. настоящих Условий, с которыми Пользователь не согласен, он обязан прекратить использование Сервиса.</p>
+
+<p>1.5. Сервис предлагает Пользователю возможность бесплатного доступа к сервису автоматизированного перевода текстов Пользователя. Все существующие на данный момент функции Сервиса, а также любое развитие их и/или добавление новых является предметом настоящих Условий.</p>
+
+<h2>2. Использования Сервиса. Отдельные функции Сервиса</h2>
+
+<p>2.1. Сервис предоставляет Пользователю возможность автоматического перевода с одного языка на другой текстов, введенных Пользователем.</p>
+
+<p>2.2. Автоматизированный перевод текстов и веб-страниц выполняется с помощью общедоступных&nbsp;технологий.</p>
+
+<p>2.3. Сервис предоставляется Пользователю для личного некоммерческого использования.</p>
+
+<p>2.4. <span style="color:rgb(0, 0, 0); font-size:15px">Unsonet</span> оставляет за собой право на свое усмотрение ограничить доступ Пользователя к Сервису (или к определенным функциям Сервиса, если это возможно технологически).</p>
+</div>
+
+
+</div>
+
+
+<div id='help_window' class='modal_window'>
+
+  <h1>Перевод текста</h1>
+
+<div class="body conbody" style="color: rgb(0, 0, 0); font-size: 15px;">
+<h2>Переключить язык</h2>
+
+<p>В качестве исходного языка и языка перевода Сервис автоматически выбирает русский язык.</p>
+
+<p>Первый блок служит для ввода исходного текста, второй - отображает переведенный текст. Чтобы изменить язык перевода или исходного текста, в дестктопном отображении сервиса нажмите на соответсующие языкам кнопки, а в мобильном отображении нажмите название языка и выберите из списка нужное.</p>
+
+<p>Чтобы переключить направление перевода, нажмите кнопку&nbsp;<i class="fa fa-exchange" aria-hidden="true" style="
+        transform: rotate(90deg);
+        "></i></p>
+
+<h2>Получить альтернативный перевод отдельного слова из фразы</h2>
+
+<p>В блоке с переведенным текстом нажмите на слово, для которого нужно получить все совпадения в словаре.</p>
+
+<h2>Скопировать перевод</h2>
+
+<p>Нажмите кнопку&nbsp;<i class="fa fa-clone" aria-hidden="true"></i>.</p>
+
+<h2>Использовать подсказки</h2>
+
+<div class="p" style="margin: 10px 0px;">Начните вводить текст для перевода и подсказки покажут продолжение слова или наиболее вероятное следующее слово:
+<ul>
+  <li>Чтобы воспользоваться подсказкой, нажмите на клавиатуре клавишу&nbsp;Tab&nbsp;или выберите подсказку указателем мыши.</li>
+</ul>
+</div>
+<h2>Использовать экранную клавиатуру </h2>
+
+<p>Вы можете использовать виртуальную клавиатуру для ввода текста. Для этого нажмите кнопку&nbsp;<i class="fa fa-keyboard-o" aria-hidden="true"></i>. Используйте указатель мыши для ввода символов.</p>
+
+
+</div>
+
+
+</div>
+
+
   </nav>
   <div class="copyright cassing">
 
