@@ -6,7 +6,8 @@
 var f_Lang;
 
 function f_Lang_check() {
-    f_Lang = $('#selector_language').val();
+    f_Lang = $('#selector_language option:selected').val();
+    
     //if(f_Lang==='find') {f_Lang = rus};
     if (f_Lang === 'rus') {
         f_Lang = rus;
@@ -14,6 +15,7 @@ function f_Lang_check() {
     if (f_Lang === 'myv') {
         f_Lang = myv;
     }
+   
     return f_Lang;
 }
 
@@ -26,7 +28,7 @@ $(window).on("load", function() {
 //f_Lang.sort();
 function down(obj) {
     var reg = new RegExp('^' + lastWord(obj.value), 'i'),
-        t = document.getElementById('pod1');
+    t = document.getElementById('pod1');
     var t2 = document.getElementById('pod2');
     var t3 = document.getElementById('pod3');
     var t4 = document.getElementById('pod4');
@@ -126,109 +128,7 @@ function word_paste(ids) {
 }
 //конец живого поиска
 
-function translate() {
-    document.getElementById('field2').innerText = document.getElementById('field1').value;
 
-    // $('select#language').change(function() {
-    //     var lanRegion = $(this).val();
-    //     localStorage.removeItem("lanRegion");
-    //     localStorage.setItem('lanRegion', '' + lanRegion + '');
-    // });
-
-    var Lang = $('#language').val();
-    
-        if (Lang === 'rus') {
-            Lang = rus;
-        }
-        if (Lang === 'myv') {
-            Lang = myv;
-        }
-
-        if (Lang.length > 1) {
-            ///////////////////////////////////////////////////////////main algorithm
-            $('#field2').html(function(x, y) {
-                //y=y.split(/\s* \s*/); only spaces 
-                y = y.replace(/<[^>]+>/g, '');
-                y = y.match(/[A-Za-z0-9а-яА-Я]+|./g);
-                y.clean(' ');
-                var newArr;
-                var itemsRange;
-                var firstArr = y.slice();
-
-                newArr = y.reduce(function(arr, item, ci) {
-                    for (var di = ci; di < y.length; di++) {
-
-                        if (di <= ci) {
-                            itemsRange = item;
-                        } else {
-                            itemsRange = y.multiGetRange(ci, di).join(' ');
-                        }
-
-                        f_Lang.reduce(function(previousValue, prev, i, cur) {
-
-                            /*
-                            alert('массив: '+cur 
-                                +'\n copyар фул: '+ y
-                            +'\n ар фул: '+ arr
-                            +'\n ар итем: '+arr[ci]
-                            +'\n итем: '+item
-                            +'\n посл: '+previousValue 
-                            +'\n прев: '+prev
-                            +'\n и: '+i
-                            +'\n итемсРэндж: '+itemsRange
-                            ); 
-                            */
-
-                            if (('' + itemsRange).toLowerCase() == ('' + prev).toLowerCase()) {
-
-                                if ((di - ci) >= 1) {
-
-                                    // изменяет заданное количество элементов массива
-                                    var removeValFromIndex = range(ci, di);
-                                    for (var r = removeValFromIndex.length - 1; r >= 0; r--) {
-                                        arr.splice(removeValFromIndex[r], 1, '');
-                                    }
-                                    return arr[di] = [itemsRange.replace(new RegExp('^' + prev + '$', 'gi'), Lang[i])];
-                                } else {
-
-                                    if (typeof arr[ci] == 'object') {
-                                        return arr[ci].push(itemsRange.replace(new RegExp('^' + prev + '$', 'gi'), Lang[i]));
-                                    } else {
-                                        return arr[ci] = [itemsRange.replace(new RegExp('^' + prev + '$', 'gi'), Lang[i])];
-                                    }
-                                }
-
-                            } else {
-                                return [itemsRange.toString().replace(new RegExp('^' + prev + '$', 'gi'), Lang[i])];
-                            }
-
-                        }, 0);
-
-                    }
-
-                    return arr;
-                }, firstArr);
-
-                var fieldContent = '';
-                newArr.clean('');
-                newArr.reduce(function(mas, newItem, i) {
-                    if (newArr[i][1] === undefined || typeof(newArr[i]) == 'string') {
-                        return fieldContent = fieldContent + '<span>' + newItem + '</span> ';
-                    } else {
-                        return fieldContent = fieldContent +
-                            '<span id="word-' + i + '" class="word-show-hint" data-hint="#word-hint-' + i + '">' + newArr[i][0] + '</span> ' + '<div id="word-hint-' + i + '" class="word-hint"><ul class="selectMenuBox">' + generateList(newItem).innerHTML + '</ul></div>';
-                    }
-
-                }, y);
-
-                return fieldContent;
-
-            });
-///////////////////////////////////////////////////////////end main algorithm
-
-        }
-    
-}
 
 
 //проверка наличия блоков и истории
@@ -263,21 +163,7 @@ function range(start, count) {
     return foo;
 }
 
-// вывод диапазона элементов массива
-Array.prototype.multiGetRange = function(lowEnd, highEnd) {
-    var numArr = [],
-        c = highEnd - lowEnd + 1;
-    while (c--) {
-        numArr[c] = highEnd--;
-    }
-    var args = Array.apply(null, numArr);
-    var result = [];
 
-    for (var i = 0; i < numArr.length; i++) {
-        result.push(this[args[i]]);
-    }
-    return result;
-};
 
 // удаление элементов содержащих определенное значение
 Array.prototype.clean = function(deleteValue) {
@@ -357,8 +243,113 @@ $('document').ready(function govno() {
 
     $('.translate_button').on('click', function(e) {
         // отменяем стандартное действие при клике
-f_Lang_check();
-        translate();
+        f_Lang_check();
+/*promise*/
+function delay() {
+    return new Promise(function(resolve,reject) {
+       
+/*translate*/
+function translate() {
+
+(function preStart() {
+	$("#field2")
+  $("#field2").css("display", "none");
+  $("#progressbar").css("display", "block");;
+})();
+
+    document.getElementById('field2').innerText = document.getElementById('field1').value;
+
+    // $('select#language').change(function() {
+    //     var lanRegion = $(this).val();
+    //     localStorage.removeItem("lanRegion");
+    //     localStorage.setItem('lanRegion', '' + lanRegion + '');
+    // });
+
+    var Lang = $('#language').val();
+    
+    if (Lang === 'rus') {
+        Lang = rus;
+    }
+    if (Lang === 'myv') {
+        Lang = myv;
+    }
+
+    if (Lang.length > 1) {
+            ///////////////////////////////////////////////////////////main algorithm
+            $('#field2').html(function(x, y) {
+                //y=y.split(/\s* \s*/); only spaces 
+                y = y.replace(/<[^>]+>/g, '');
+                y = y.match(/[A-Za-z0-9а-яА-Я]+|./g);
+                y.clean(' ');
+                
+                
+                /*web workers*/
+                function withWebWorker() {
+                    var worker = new Worker("src/js/translate.js");
+
+
+
+                    function webWorkEvent(e) {
+try{
+ 
+                        var newArr = e.data;
+                      
+console.log(newArr);
+                      function alternativWords(newArr){
+
+                        var fieldContent = '';
+                        newArr.clean('');
+                        newArr.reduce(function(mas, newItem, i) {
+                            if (newArr[i][1] === undefined || typeof(newArr[i]) == 'string') {
+                                return fieldContent = fieldContent + '<span>' + newItem + '</span> ';
+                            } else {
+                                return fieldContent = fieldContent +
+                                '<span id="word-' + i + '" class="word-show-hint" data-hint="#word-hint-' + i + '">' + newArr[i][0] + '</span> ' + '<div id="word-hint-' + i + '" class="word-hint"><ul class="selectMenuBox">' + generateList(newItem).innerHTML + '</ul></div>';
+                            }
+
+                        }, y);
+
+                        resolve(fieldContent);
+                        return fieldContent;
+                    }
+                    return alternativWords(newArr);
+
+}catch(e){}
+
+                }
+
+                worker.onmessage = function(e){ return webWorkEvent(e)};
+                worker.postMessage([[y],[f_Lang],[Lang]]);
+                return webWorkEvent();
+            }
+
+            return withWebWorker();
+            /*end web workers*/
+
+        });
+///////////////////////////////////////////////////////////end main algorithm
+}
+}
+/*translate*/
+
+
+      // translate();
+            translate();
+            //reject(alert('не выполнено'));
+  
+    });
+}
+
+var promise = delay();
+      promise.then(function(response) {
+    
+
+
+(function afterStop() {
+$('#field2').html(response);
+  $("#progressbar").css("display", "none");
+  $("#field2").css("display", "block");
+ })();
         splitLines();
 
         /* hint and select box */
@@ -402,6 +393,8 @@ f_Lang_check();
 
         // Передаем адрес страницы в функцию
         getContent(href, true);
+
+});
     });
 });
 /* конец блока функций после загрузки страницы */

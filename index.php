@@ -26,6 +26,7 @@
   <meta name="twitter:description" content="Онлайн переводчик текста"></meta> 
   <meta name="twitter:image" content="/src/img/logo.png"></meta>
 
+<meta name="yandex-verification" content="b9a972018937aab7" />
   <meta name="yandex-tableau-widget" content="logo=/src/img/logo.png, color=#a33" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
@@ -165,8 +166,11 @@
   
  </div>
  <div name="text2" id="field2" contenteditable="false" data-text="Перевод">
-
  </div>
+<div id="progressbar">
+         Идет перевод...
+</div>
+
 
  <div class="bottom_panel">
    <div class="right_buttons_botton">
@@ -239,7 +243,7 @@
     <!-- /links -->
     <!-- windows -->
     <div id='mobile_window' class='modal_window'><span>Мобильная версия сайта находится в разработке</span></div>					
-    <div id='about_window' class='modal_window'><h1 style="text-align: center;">Этник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><span style="color:gray; font-size:12px;float:right;">Версия приложения: 0.1.3 (beta)</span></div>						
+    <div id='about_window' class='modal_window'><h1 style="text-align: center;">Этник Переводчик</h1>Это бесплатный сервис с открытым исходным кодом  позволяющий переводить слова, фразы на различные языки. В данный момент доступен русский и эрзянский словари содержащие более 40 тыс. слов.<br/><br/><span style="color:gray; font-size:12px;float:right;">Версия приложения: 0.2.0 (beta)</span></div>						
     <div id='feed_window' class='modal_window'>Будем признательны, если вы оставите отзыв, предложение или пожелание.
       <!--feed-back-->
       <!--feedback php-->

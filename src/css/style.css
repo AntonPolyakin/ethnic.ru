@@ -931,14 +931,16 @@ ul.selectMenuBox > li.option:hover {
     z-index: 2;
     top: 0;
     right: 0;
-    bottom: 0;
     left: 0;
     display: none; /* don't show it */
     box-sizing: border-box;
     max-width: 50%;
     min-height: 50%;
-    height: max-content;
+    min-height: -moz-available;          
+    min-height: -webkit-fill-available;
+    min-height: fill-available;
     margin: auto;
+    box-shadow: 0 5px 26px 0 rgba(0,0,0,.32);
     /* styling bellow */
     
 }
@@ -965,7 +967,7 @@ i.close_modal:hover{opacity: 1;}
 
 /* style a specific modal window  */
 #mobile_window{
-    background: url(../img/presentation.png) no-repeat;
+    background: #ebebeb url(../img/presentation.png) no-repeat;
     background-size: 100%;
 }
 
@@ -1018,6 +1020,71 @@ i.close_modal:hover{opacity: 1;}
 }
 
 
+
+/*progress*/
+
+#progressbar {
+-ms-user-select:none;
+-moz-user-select:none;
+-khtml-user-select:none;
+-webkit-user-select:none;
+
+user-select:none;
+display: none;
+    border-radius: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 50%;
+    height: max-content;
+    line-height: 21px;
+    font-size: 15px;
+    font-family: sans-serif;
+    text-align: center;
+    position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  max-width: 50%;
+color: gray;
+  background: -webkit-linear-gradient(
+    135deg,
+    #eee 25%, #e0e0e0 25%,
+        #e0e0e0 50%, #eee 50%,
+        #eee 75%, #e0e0e0 75%
+  );
+  
+  background: -moz-linear-gradient(
+    135deg,
+    #eee 25%, #e0e0e0 25%,
+        #e0e0e0 50%, #eee 50%,
+        #eee 75%, #e0e0e0 75%
+  );
+  
+  background: -o-linear-gradient(
+    135deg,
+    #eee 25%, #e0e0e0 25%,
+        #e0e0e0 50%, #eee 50%,
+        #eee 75%, #e0e0e0 75%
+  );
+  
+  
+  background-size: 50px 50px;
+  -webkit-animation: bar-animation 3s linear infinite;
+
+}
+
+
+@-webkit-keyframes bar-animation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
 
 
 
@@ -1098,10 +1165,12 @@ footer{
 }
  
 .modal_window {
+    min-height: -moz-available;          
+    min-height: -webkit-fill-available;
+    min-height: fill-available;
     bottom:auto;
     top:0;
     min-width:100%;
-    height: auto;
 }
 
 }
