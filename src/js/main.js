@@ -294,7 +294,7 @@ try{
  
                         var newArr = e.data;
                       
-console.log(newArr);
+
                       function alternativWords(newArr){
 
                         var fieldContent = '';
