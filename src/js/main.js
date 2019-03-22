@@ -6,7 +6,7 @@
 var f_Lang;
 
 function f_Lang_check() {
-    f_Lang = $('#selector_language option:selected').val();
+    f_Lang = $('#selector_language option:selected').val() || 'rus';
     
     //if(f_Lang==='find') {f_Lang = rus};
     if (f_Lang === 'rus') {
@@ -15,20 +15,21 @@ function f_Lang_check() {
     if (f_Lang === 'myv') {
         f_Lang = myv;
     }
-   
+
     return f_Lang;
 }
 
 // проверить исходный язык после загрузки документа
-$(window).on("load", function() {
+document.addEventListener("DOMContentLoaded", function () {
     f_Lang_check();
 });
 //далее живой поиск, автозамена слов
 //f_Lang - массив со словами   
 //f_Lang.sort();
 function down(obj) {
-    var reg = new RegExp('^' + lastWord(obj.value), 'i'),
-    t = document.getElementById('pod1');
+
+    var reg = new RegExp(`^${() => lastWord(obj.value).length == 1 ? '\\'+lastWord(obj.value) : lastWord(obj.value)}`, 'i'),
+        t = document.getElementById('pod1');
     var t2 = document.getElementById('pod2');
     var t3 = document.getElementById('pod3');
     var t4 = document.getElementById('pod4');
@@ -78,9 +79,9 @@ function down(obj) {
 
         }
     }
-    $(function() {
+    $(function () {
         var original = [];
-        $('.words_hints').each(function() {
+        $('.words_hints').each(function () {
             var thisText = $(this).text();
             if (original[thisText]) {
                 $(this).css('display', 'none');
@@ -101,14 +102,14 @@ function ReplaceLastWord(str, newStr) {
     return str.replace(/\s\S+$/, newStr);
 }
 
-function setFocus() {      
-    document.getElementById("field1").focus(); 
+function setFocus() {
+    document.getElementById("field1").focus();
 }
 var words_counter;
 
 function calc_words() {
     var val = $.trim($("#field1").val()).split(/\s+/g);
-    words_counter = $.grep(val, function(str) {
+    words_counter = $.grep(val, function (str) {
         return $.trim(str).length > 0;
     }).length;
     return words_counter;
@@ -149,24 +150,8 @@ function addHistory(words, translation, l1t, l2t) {
     checkTitle();
 }
 
-// создание числового диапазона в виде массива
-function range(start, count) {
-    if (arguments.length == 1) {
-        count = start;
-        start = 0;
-    }
-
-    var foo = [];
-    for (var i = 0; i < count; i++) {
-        foo.push(start + i);
-    }
-    return foo;
-}
-
-
-
 // удаление элементов содержащих определенное значение
-Array.prototype.clean = function(deleteValue) {
+Array.prototype.clean = function (deleteValue) {
     for (var i = 0; i < this.length; i++) {
         if (this[i] == deleteValue) {
             this.splice(i, 1);
@@ -197,20 +182,31 @@ function generateList(items) {
 function showLines() {
     var lines = getLines();
     console.log(
-        lines.map(function(line) {
-            return line.map(function(span) {
+        lines.map(function (line) {
+            return line.map(function (span) {
                 return span.innerText;
             }).join('');
         }));
 }
 
-//разделение текста
-function splitLines() {
-    var p = document.querySelectorAll("#field2")[0];
-    p.innerHTML = p.innerHTML.split(/\<span\>[\.]\<\/span\>/g).map(function(word) {
-        return '<span class="parag">' + capitalizeFirstLetter(word) + '</span>'
-    }).join('<span>.</span> ');
+//расстановка пробелов
+function spaceLines() {
+    var p = document.querySelector("#field2");
+    for (let i = p.children.length - 1 ; i >= 0 ; i-- ){
+        if (p.children[i].classList.contains('word') ){
+        p.children[i].insertAdjacentHTML("beforeBegin", " ");
+        }
+    }
+}
 
+//разделение текста
+function splitLines(char) {
+    var p = document.querySelector("#field2");
+    if (p.innerHTML.indexOf(char) != -1) {
+    p.innerHTML = p.innerHTML.split(new RegExp(`\<span\>[${char}]\<\/span\>`, 'g')).map(function (word) {
+        return '<span class="parag">' + capitalizeFirstLetter(word) + '</span>'
+    }).join(`<span class="char">${char}</span>`);
+    }
 }
 
 //? 
@@ -241,174 +237,185 @@ function capitalizeFirstLetter(string) {
 $('document').ready(function govno() {
 
 
-    $('.translate_button').on('click', function(e) {
+    $('.translate_button').on('click', function (e) {
         // отменяем стандартное действие при клике
+        e.preventDefault();
         f_Lang_check();
-/*promise*/
-function delay() {
-    return new Promise(function(resolve,reject) {
-       
-/*translate*/
-function translate() {
+        /*promise*/
+        function delay() {
+            return new Promise(function (resolve, reject) {
 
-(function preStart() {
-	$("#field2")
-  $("#field2").css("display", "none");
-  $("#progressbar").css("display", "block");;
-})();
+                /*translate*/
+                function translate() {
 
-    document.getElementById('field2').innerText = document.getElementById('field1').value;
+                    (function preStart() {
+                        $("#field2")
+                        $("#field2").css("display", "none");
+                        $("#progressbar").css("display", "block");;
+                    })();
 
-    // $('select#language').change(function() {
-    //     var lanRegion = $(this).val();
-    //     localStorage.removeItem("lanRegion");
-    //     localStorage.setItem('lanRegion', '' + lanRegion + '');
-    // });
+                    document.getElementById('field2').innerText = document.getElementById('field1').value;
 
-    var Lang = $('#language').val();
-    
-    if (Lang === 'rus') {
-        Lang = rus;
-    }
-    if (Lang === 'myv') {
-        Lang = myv;
-    }
+                    // $('select#language').change(function() {
+                    //     var lanRegion = $(this).val();
+                    //     localStorage.removeItem("lanRegion");
+                    //     localStorage.setItem('lanRegion', '' + lanRegion + '');
+                    // });
 
-    if (Lang.length > 1) {
-            ///////////////////////////////////////////////////////////main algorithm
-            $('#field2').html(function(x, y) {
-                //y=y.split(/\s* \s*/); only spaces 
-                y = y.replace(/<[^>]+>/g, '');
-                y = y.match(/[A-Za-z0-9а-яА-Я]+|./g);
-                y.clean(' ');
-                
-                
-                /*web workers*/
-                function withWebWorker() {
-                    var worker = new Worker("src/js/translate.js");
+                    var Lang = $('#language').val();
+
+                    if (Lang === 'rus') {
+                        Lang = rus;
+                    }
+                    if (Lang === 'myv') {
+                        Lang = myv;
+                    }
+
+                    if (Lang.length > 1) {
+                        ///////////////////////////////////////////////////////////main algorithm
+                        $('#field2').html(function (x, y) {
+                            //y=y.split(/\s* \s*/); only spaces 
+                            y = y.replace(/<[^>]+>/g, '');
+                            y = y.match(/[A-Za-z0-9а-яА-Я]+|./g);
+                            y.clean(' ');
 
 
+                            /*web workers*/
+                            function withWebWorker() {
+                                var worker = new Worker("src/js/translate.js");
 
-                    function webWorkEvent(e) {
-try{
- 
-                        var newArr = e.data;
-                      
 
-                      function alternativWords(newArr){
 
-                        var fieldContent = '';
-                        newArr.clean('');
-                        newArr.reduce(function(mas, newItem, i) {
-                            if (newArr[i][1] === undefined || typeof(newArr[i]) == 'string') {
-                                return fieldContent = fieldContent + '<span>' + newItem + '</span> ';
-                            } else {
-                                return fieldContent = fieldContent +
-                                '<span id="word-' + i + '" class="word-show-hint" data-hint="#word-hint-' + i + '">' + newArr[i][0] + '</span> ' + '<div id="word-hint-' + i + '" class="word-hint"><ul class="selectMenuBox">' + generateList(newItem).innerHTML + '</ul></div>';
+                                function webWorkEvent(e) {
+                                    try {
+
+                                        var newArr = e.data;
+
+                                       
+                                        function alternativWords(newArr) {
+
+                                            var fieldContent = '';
+                                            newArr.clean('');
+                                            newArr.reduce(function (mas, newItem, i) {
+                                                if (newArr[i][1] === undefined || typeof (newArr[i]) == 'string') {
+
+                                                    let detectClass = () => (newItem == ','||':') ? '<span class="char">' + newItem + '</span>':'<span class="word">' + newItem + '</span>';
+                                                    return fieldContent += detectClass();
+                                                } else {
+                                                    return fieldContent += '<span id="word-' + i + '" class="word-show-hint word" data-hint="#word-hint-' + i + '">' + newArr[i][0] + '</span>' + '<div id="word-hint-' + i + '" class="word-hint"><ul class="selectMenuBox">' + generateList(newItem).innerHTML + '</ul></div>';
+                                                }
+
+                                            }, y);
+
+                                            resolve(fieldContent);
+                                            return fieldContent;
+                                        }
+                                        return alternativWords(newArr);
+
+                                    } catch (e) {}
+
+                                }
+
+                                worker.onmessage = function (e) {
+                                    return webWorkEvent(e)
+                                };
+                                worker.postMessage([
+                                    [y],
+                                    [f_Lang],
+                                    [Lang]
+                                ]);
+                                return webWorkEvent();
                             }
 
-                        }, y);
+                            return withWebWorker();
+                            /*end web workers*/
 
-                        resolve(fieldContent);
-                        return fieldContent;
+                        });
+                        ///////////////////////////////////////////////////////////end main algorithm
                     }
-                    return alternativWords(newArr);
-
-}catch(e){}
-
                 }
-
-                worker.onmessage = function(e){ return webWorkEvent(e)};
-                worker.postMessage([[y],[f_Lang],[Lang]]);
-                return webWorkEvent();
-            }
-
-            return withWebWorker();
-            /*end web workers*/
-
-        });
-///////////////////////////////////////////////////////////end main algorithm
-}
-}
-/*translate*/
+                /*translate*/
 
 
-      // translate();
-            translate();
-            //reject(alert('не выполнено'));
-  
-    });
-}
-
-var promise = delay();
-      promise.then(function(response) {
-    
-
-
-(function afterStop() {
-$('#field2').html(response);
-  $("#progressbar").css("display", "none");
-  $("#field2").css("display", "block");
- })();
-        splitLines();
-
-        /* hint and select box */
-        $(function() {
-            $('.word-show-hint').on("click", function(e) {
-                e = e || window.event;
-                e.preventDefault();
-
-                var ypos = $(this).position().top + 25; //sometimes .offset().top
-                var xpos = $(this).position().left; //sometimes .offset().left
-                var WordHint = $(this).data('hint');
-                var WordId = $(this).attr('id');
-                $(WordHint).css('top', ypos);
-                $(WordHint).css('left', xpos);
-                $(WordHint).toggle('fast');
-                return false;
+                // translate();
+                translate();
+                //reject(alert('не выполнено'));
 
             });
+        }
 
-            $('ul.selectMenuBox > li.option').click(function() {
+        var promise = delay();
+        promise.then(function (response) {
 
-                var parentId = $(this).parents(":eq(1)").attr('id').replace('hint-', '');
-                $('#' + parentId).text($(this).text());
+
+
+            (function afterStop() {
+                $('#field2').html(response);
+                $("#progressbar").css("display", "none");
+                $("#field2").css("display", "block");
+            })();
+            spaceLines();
+            splitLines(';');
+            splitLines('.');
+            splitLines('!');
+            splitLines('?');
+            /* hint and select box */
+            $(function () {
+                $('.word-show-hint').on("click", function (e) {
+                    e = e || window.event;
+                    e.preventDefault();
+
+                    var ypos = $(this).position().top + 25; //sometimes .offset().top
+                    var xpos = $(this).position().left; //sometimes .offset().left
+                    var WordHint = $(this).data('hint');
+                    var WordId = $(this).attr('id');
+                    $(WordHint).css('top', ypos);
+                    $(WordHint).css('left', xpos);
+                    $(WordHint).toggle('fast');
+                    return false;
+
+                });
+
+                $('ul.selectMenuBox > li.option').click(function () {
+
+                    var parentId = $(this).parents(":eq(1)").attr('id').replace('hint-', '');
+                    $('#' + parentId).text($(this).text());
+                });
+
+                document.onclick = function (e) {
+                    if ($(e.target).hasClass('word-hint') === false)
+                        $('.word-hint').hide('fast');
+                    return;
+                }
             });
+            /* end hint and select box */
 
-            document.onclick = function(e) {
-                if ($(e.target).hasClass('word-hint') === false)
-                    $('.word-hint').hide('fast');
-                return;
-            }
+            addHistory(document.getElementById('field1').value, document.getElementById('field2').innerText, $("#selector_language option:selected").text(), $("#language option:selected").text());
+
+            //    showLines();
+
+
+            // Получаем адрес страницы
+            var href = window.location.href;
+
+            // Передаем адрес страницы в функцию
+            getContent(href, true);
+
         });
-        /* end hint and select box */
-
-        addHistory(document.getElementById('field1').value, document.getElementById('field2').innerText, $("#selector_language option:selected").text(), $("#language option:selected").text());
-
-        //    showLines();
-        e.preventDefault();
-
-        // Получаем адрес страницы
-        var href = window.location.href;
-
-        // Передаем адрес страницы в функцию
-        getContent(href, true);
-
-});
     });
 });
 /* конец блока функций после загрузки страницы */
 
 // Добавляем обработчик события popstate, 
 // происходящего при нажатии на кнопку назад/вперед в браузере  
-window.addEventListener("popstate", function(e) {
+window.addEventListener("popstate", function (e) {
     // Передаем текущий URL
     getContent(location.pathname, false);
 });
 
 /* Функция загрузки контента */
 function getContent(url, addEntry) {
-    $.get(url).done(function(data) {
+    $.get(url).done(function (data) {
         // Обновление только текстового содержимого в сером блоке
 
 
@@ -422,8 +429,7 @@ function getContent(url, addEntry) {
         if (addEntry == true) {
             // Добавляем запись в историю, используя pushState
             var new_url = document.getElementById('field1').value;
-            new_url = new_url.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
-            new_url = new_url.replace(/ /g, "_");
+            new_url = escape(new_url);
             window.history.pushState('', '', '?w=' + new_url);
         }
 

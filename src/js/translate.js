@@ -1,4 +1,19 @@
 onmessage = function(e){
+
+// создание числового диапазона в виде массива
+function range(start, count) {
+    if (arguments.length == 1) {
+        count = start;
+        start = 0;
+    }
+
+    var foo = [];
+    for (var i = 0; i < count; i++) {
+        foo.push(start + i);
+    }
+    return foo;
+}
+
 // вывод диапазона элементов массива
 Array.prototype.multiGetRange = function(lowEnd, highEnd) {
     var numArr = [],
@@ -39,7 +54,11 @@ var newArr;
 var itemsRange;
 
 
+
 newArr = y.reduce(function(arr, item, ci) {
+
+    
+
                     for (var di = ci; di < y.length; di++) {
 
                         if (di <= ci) {
@@ -55,7 +74,8 @@ newArr = y.reduce(function(arr, item, ci) {
                                 if ((di - ci) >= 1) {
 
                                     // изменяет заданное количество элементов массива
-                                    var removeValFromIndex = range(ci, di);
+                                    var removeValFromIndex = range(ci, di-1);
+                                   
                                     for (var r = removeValFromIndex.length - 1; r >= 0; r--) {
                                         arr.splice(removeValFromIndex[r], 1, '');
                                     }
