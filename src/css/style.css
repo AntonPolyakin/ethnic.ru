@@ -539,6 +539,10 @@ header,
     background: none;
 }
 
+#field2:first-letter{
+    text-transform: capitalize
+  }
+
 #field2:empty:before {
     margin-right: calc(50%-80px);
     content: attr(data-text);
