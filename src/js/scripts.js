@@ -1,26 +1,26 @@
 
 /*preloader*/
-window.addEventListener("load", function() {
-    var myApp = (function() {
+// window.addEventListener("load", function() {
+//     var myApp = (function() {
 
-      let dummyFunction = function() {
-        let preloader = document.all['js-preloader'];
-        preloader.classList.toggle('preloader-fadeout', true);
-        setTimeout(function() {
-          preloader.remove();
-      }, 1000);
+//       let dummyFunction = function() {
+//         let preloader = document.all['js-preloader'];
+//         preloader.classList.toggle('preloader-fadeout', true);
+//         setTimeout(function() {
+//           preloader.remove();
+//       }, 1000);
 
-    };
+//     };
 
-    return {
-        dummyFunction: dummyFunction
-    };
+//     return {
+//         dummyFunction: dummyFunction
+//     };
 
-})();
+// })();
 
 
-myApp.dummyFunction();
-});
+// myApp.dummyFunction();
+// });
 /*end preloader*/
 
 /*swap language*/

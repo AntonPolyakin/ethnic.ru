@@ -46,9 +46,9 @@
 </head>
 <body>
 
-<div class="preloader" id="js-preloader">
+<!-- <div class="preloader" id="js-preloader">
   <div class="spin"></div>
-</div>
+</div> -->
 
   
 	<div id="wrapper">		

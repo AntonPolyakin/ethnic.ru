@@ -205,7 +205,7 @@ function splitLines(char) {
     if (p.innerHTML.indexOf(char) != -1) {
     p.innerHTML = p.innerHTML.split(new RegExp(`\<span\>[${char}]\<\/span\>`, 'g')).map(function (word) {
         return '<span class="parag">' + capitalizeFirstLetter(word) + '</span>'
-    }).join(`<span class="char">${char}</span>`);
+    }).join(`<span class="char">${char}</span> `);
     }
 }
 
@@ -276,8 +276,8 @@ $('document').ready(function govno() {
                         $('#field2').html(function (x, y) {
                             //y=y.split(/\s* \s*/); only spaces 
                             y = y.replace(/<[^>]+>/g, '');
-                            y = y.match(/[A-Za-z0-9а-яА-Я]+|./g);
-                            y.clean(' ');
+                            y = y.match(/\\t|\\n|\\"|((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/[^" <>\\]*)?)|[^" \.,:;«»!?&<>(){}\-\+\[\]\\/]+|\/{1,}|[A-Za-z0-9а-яА-Я\u00c0-\u00ff]+|[^ \"]|./gim);
+                            
 
 
                             /*web workers*/
